@@ -1,0 +1,10 @@
+{
+  "name": "sound-player-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Alex Polzien",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.7.6"
+  }
+}
