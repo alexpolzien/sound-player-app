@@ -1,8 +1,8 @@
-import styles from '../../css/app.css';
+import styles from './app.css';
 
 import React from 'react';
 
-import Counter from './counter.jsx';
+import Counter from '../counter/counter.jsx';
 
 export default class App extends React.Component {
   render() {

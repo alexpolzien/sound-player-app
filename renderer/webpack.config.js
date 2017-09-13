@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    renderer: './src/js/renderer.jsx'
+    renderer: './src/renderer.jsx'
   },
   output: {
     publicPath: 'http://localhost:8080/'

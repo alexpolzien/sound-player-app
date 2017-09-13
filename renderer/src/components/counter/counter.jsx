@@ -1,3 +1,5 @@
+import styles from './counter.css';
+
 import React from 'react';
 
 export default class Counter extends React.Component {
@@ -25,6 +27,6 @@ export default class Counter extends React.Component {
   }
 
   render() {
-    return <div>Bar It!: {this.state.count}</div>;
+    return <div>Bar It!: <span className={styles.number}>{this.state.count}</span></div>;
   }
 }

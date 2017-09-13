@@ -1,4 +1,4 @@
-require('../css/main.css');
+require('./main.css');
 
 require('react-hot-loader/patch');
 
@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 
-import App from './components/app.jsx';
+import App from './components/app/app.jsx';
 
 function renderApp(RootComponent) {
   ReactDOM.render(
@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 if (module.hot) {
-  module.hot.accept('./components/app.jsx', () => {
-    const App = require('./components/app.jsx').default;
+  module.hot.accept('./components/app/app.jsx', () => {
+    const App = require('./components/app/app.jsx').default;
     renderApp(App);
   });
 }
