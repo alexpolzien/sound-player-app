@@ -19,5 +19,9 @@
   "devDependencies": {
     "react-hot-loader": "next",
     "webpack-dev-server": "^2.7.1"
+  },
+  "scripts": {
+    "main-dev": "./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron ./main/main.js",
+    "renderer-dev": "cd renderer && ../node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   }
 }
