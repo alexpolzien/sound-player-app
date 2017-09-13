@@ -24,11 +24,11 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules)/,
         use: [
-          {loader: 'react-hot-loader/webpack'},
           {
             loader: 'babel-loader',
             options: {
-              presets: ['react']
+              presets: ['react'],
+              plugins: ['react-hot-loader/babel']
             }
           }
         ]
@@ -36,6 +36,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ]
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin()
+  ],
+  target: 'electron-renderer'
 };
