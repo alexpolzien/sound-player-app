@@ -4,7 +4,6 @@ import React from 'react';
 import {Provider} from 'react-redux';
 
 import ClickerContainer from '../ClickerContainer/ClickerContainer.jsx';
-import Counter from '../Counter/Counter.jsx';
 
 export default class App extends React.Component {
   render() {
@@ -12,9 +11,6 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <div className={styles.app}>
-          <Counter />
-          <br />
-          <br />
           <ClickerContainer />
         </div>
       </Provider>

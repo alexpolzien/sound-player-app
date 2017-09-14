@@ -1,17 +1,9 @@
-import {INCREMENT_COUNT} from '../actions/action-types';
+import {combineReducers} from 'redux';
 
-const initialState = {count: 0};
+import count from './count';
+import files from './files';
 
-export function rootReducer(state = initialState, action) {
-  switch (action.type) {
-    case INCREMENT_COUNT:
-      return {
-        ...state,
-        count: state.count + 1
-      }
-    default:
-      return state;
-  }
-
-  return state;
-}
+export default combineReducers({
+  count,
+  files
+});

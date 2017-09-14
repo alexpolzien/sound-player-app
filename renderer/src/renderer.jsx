@@ -8,7 +8,7 @@ import {createStore} from 'redux';
 import {AppContainer} from 'react-hot-loader';
 
 import App from './components/App/App.jsx';
-import {rootReducer} from './reducers/index.js';
+import rootReducer from './reducers/index.js';
 
 let store = createStore(rootReducer);
 

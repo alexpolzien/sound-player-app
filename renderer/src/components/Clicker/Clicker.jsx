@@ -11,7 +11,6 @@ export default class Clicker extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div onClick={this.onClick}>Click me!: {this.props.count}</div>
     );
