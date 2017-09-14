@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {incrementCount} from '../../actions';
+import {incrementCount} from '../../actions/actions';
 import Clicker from '../Clicker/Clicker.jsx';
 
 class ClickerContainer extends React.Component {

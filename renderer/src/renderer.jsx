@@ -8,9 +8,9 @@ import {createStore} from 'redux';
 import {AppContainer} from 'react-hot-loader';
 
 import App from './components/App/App.jsx';
-import {testReducer} from './reducers.js';
+import {rootReducer} from './reducers/index.js';
 
-let store = createStore(testReducer);
+let store = createStore(rootReducer);
 
 function renderApp(RootComponent) {
   ReactDOM.render(

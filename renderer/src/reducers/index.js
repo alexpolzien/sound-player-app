@@ -1,8 +1,8 @@
-import {INCREMENT_COUNT} from './action-types';
+import {INCREMENT_COUNT} from '../actions/action-types';
 
 const initialState = {count: 0};
 
-export function testReducer(state = initialState, action) {
+export function rootReducer(state = initialState, action) {
   switch (action.type) {
     case INCREMENT_COUNT:
       return {
