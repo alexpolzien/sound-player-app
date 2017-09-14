@@ -1,11 +1,23 @@
-import styles from './app.css';
+import styles from './App.css';
 
 import React from 'react';
+import {Provider} from 'react-redux';
 
-import Counter from '../counter/counter.jsx';
+import ClickerContainer from '../ClickerContainer/ClickerContainer.jsx';
+import Counter from '../Counter/Counter.jsx';
 
 export default class App extends React.Component {
   render() {
-    return <div className={styles.app}><Counter /></div>;
+    const {store} = this.props;
+    return (
+      <Provider store={store}>
+        <div className={styles.app}>
+          <Counter />
+          <br />
+          <br />
+          <ClickerContainer />
+        </div>
+      </Provider>
+    );
   }
 }

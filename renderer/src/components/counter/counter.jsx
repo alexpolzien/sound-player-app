@@ -1,4 +1,4 @@
-import styles from './counter.css';
+import styles from './Counter.css';
 
 import React from 'react';
 
