@@ -11,7 +11,10 @@ export default class Counter extends React.Component {
 
   increment() {
     this.setState(prevState => {
-      return Object.assign({}, prevState, {count: prevState.count + 1});
+      return {
+        ...prevState,
+        count: prevState.count + 1
+      };
     });
     this.timer = setTimeout(() => {
       this.increment();
