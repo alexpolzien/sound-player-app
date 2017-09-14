@@ -1,1 +1,2 @@
 export const INCREMENT_COUNT = 'INCREMENT_COUNT';
+export const LOAD_FILES = 'LOAD_FILES';

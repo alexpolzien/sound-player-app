@@ -4,13 +4,20 @@ require('react-hot-loader/patch');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore} from 'redux';
 import {AppContainer} from 'react-hot-loader';
+import {applyMiddleware, createStore} from 'redux';
+import createSagaMiddleware from 'redux-saga';
 
 import App from './components/App/App.jsx';
-import rootReducer from './reducers/index.js';
+import rootReducer from './reducers/reducers';
+import rootSaga from './sagas/sagas';
 
-let store = createStore(rootReducer);
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+  rootReducer,
+  applyMiddleware(sagaMiddleware)
+);
+sagaMiddleware.run(rootSaga);
 
 function renderApp(RootComponent) {
   ReactDOM.render(
