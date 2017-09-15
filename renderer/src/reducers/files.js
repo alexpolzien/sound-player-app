@@ -1,4 +1,4 @@
-import {LOAD_FILES_SUCCESS} from '../actions/action-types';
+import {LOAD_FILES, LOAD_FILES_SUCCESS} from '../actions/action-types';
 
 const initialState = {
   loading: false,
@@ -8,8 +8,12 @@ const initialState = {
 export default function files(state = initialState, action) {
   switch (action.type) {
     case LOAD_FILES_SUCCESS:
-      console.log(action);
+      return {
+        ...state,
+        loading: false,
+        files: action.files
+      };
+    default:
       return state;
   }
-  return state;
 }
