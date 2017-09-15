@@ -17,11 +17,19 @@ function createWindow() {
   win.webContents.openDevTools();
 
   if (isDev) {
-    const {default: installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+      REDUX_DEVTOOLS
+    } = require('electron-devtools-installer');
 
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then(name => { console.log(`Added Extension: ${name}`) })
-      .catch(err => { console.log('Error Installing Extension', err) });
+    [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(
+      tool => {
+        installExtension(tool)
+          .then(name => { console.log(`Added Extension: ${name}`) })
+          .catch(err => { console.log('Error Installing Extension', err) });
+      }
+    );
   }
 
   win.on('closed', () => {

@@ -5,7 +5,7 @@ require('react-hot-loader/patch');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
-import {applyMiddleware, createStore} from 'redux';
+import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import {LOAD_FILES} from './actions/action-types';
@@ -14,9 +14,10 @@ import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 
 const sagaMiddleware = createSagaMiddleware();
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   rootReducer,
-  applyMiddleware(sagaMiddleware)
+  composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 store.dispatch({type: LOAD_FILES});
