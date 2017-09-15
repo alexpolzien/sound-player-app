@@ -2,7 +2,7 @@ import {remote} from 'electron';
 const fs = remote.require('fs');
 const path = remote.require('path');
 
-const SOUNDS_DIR = path.join(process.cwd(), 'sounds');
+import {SOUNDS_DIR} from '../constants';
 
 export function getFiles() {
   return new Promise(

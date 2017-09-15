@@ -5,11 +5,13 @@
   "author": "Alex Polzien",
   "license": "MIT",
   "dependencies": {
+    "av": "^0.4.9",
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-react": "^6.24.1",
+    "coffee-loader": "^0.8.0",
     "css-loader": "^0.28.7",
     "electron": "^1.7.6",
     "electron-is-dev": "^0.3.0",
