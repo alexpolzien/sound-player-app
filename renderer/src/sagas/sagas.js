@@ -1,11 +1,23 @@
 import {delay} from 'redux-saga';
-import {all, put, takeLatest} from 'redux-saga/effects';
+import {all, call, put, takeLatest} from 'redux-saga/effects';
 
-import {LOAD_FILES, LOAD_FILES_SUCCESS} from '../actions/action-types';
+import {
+  LOAD_FILES,
+  LOAD_FILES_FAIL,
+  LOAD_FILES_START,
+  LOAD_FILES_SUCCESS
+} from '../actions/action-types';
+import {getFiles} from '../files-service/files-service';
 
 function* loadFiles() {
-  yield delay(2000);
-  yield put({type: LOAD_FILES_SUCCESS, files: ['foo', 'bar']});
+  yield put({type: LOAD_FILES_START});
+  try {
+    const result = yield call(getFiles);
+    yield put({type: LOAD_FILES_SUCCESS, files: result});
+  } catch (e) {
+    yield put({type: LOAD_FILES_FAIL, message: e.message});
+  }
+
 }
 
 function* watchLoadFiles() {
