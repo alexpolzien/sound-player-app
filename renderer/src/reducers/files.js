@@ -1,8 +1,13 @@
-import {LOAD_FILES, LOAD_FILES_SUCCESS} from '../actions/action-types';
+import {
+  LOAD_FILES,
+  LOAD_FILES_SUCCESS,
+  SELECT_FILE
+} from '../actions/action-types';
 
 const initialState = {
   loading: false,
-  files: []
+  files: [],
+  selectedFile: null
 };
 
 export default function files(state = initialState, action) {
@@ -13,6 +18,13 @@ export default function files(state = initialState, action) {
         loading: false,
         files: action.files
       };
+
+    case SELECT_FILE:
+      return {
+        ...state,
+        selectedFile: action.filename
+      };
+
     default:
       return state;
   }

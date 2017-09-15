@@ -1,7 +1,8 @@
-import {INCREMENT_COUNT} from './action-types';
+import {SELECT_FILE} from './action-types';
 
-export function incrementCount() {
+export function selectFile(filename) {
   return {
-    type: INCREMENT_COUNT
+    type: SELECT_FILE,
+    filename: filename
   };
 }

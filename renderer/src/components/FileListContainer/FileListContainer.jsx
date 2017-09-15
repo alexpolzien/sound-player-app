@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
+import {selectFile} from '../../actions/actions';
 import FileList from '../FileList/FileList.jsx';
 
 class FileListContainer extends React.Component {
@@ -10,15 +12,15 @@ class FileListContainer extends React.Component {
 }
 
 function mapState(state) {
-  console.log(state);
   return {
     loading: state.files.loading,
-    files: state.files.files
+    files: state.files.files,
+    selectedFile: state.files.selectedFile
   };
 }
 
 function mapDispatch(dispatch) {
-  return {};
+  return bindActionCreators({selectFile}, dispatch);
 }
 
 export default connect(mapState, mapDispatch)(FileListContainer);
