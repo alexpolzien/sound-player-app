@@ -1,8 +1,8 @@
 import {SELECT_FILE} from './action-types';
 
-export function selectFile(filename) {
+export function selectFile(file) {
   return {
     type: SELECT_FILE,
-    filename: filename
+    file
   };
 }

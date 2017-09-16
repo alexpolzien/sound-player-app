@@ -7,6 +7,7 @@ import {
   takeLatest
 } from 'redux-saga/effects';
 
+import audioCache from '../audio-player/audio-cache';
 import {
   LOAD_FILES,
   LOAD_FILES_FAIL,
@@ -35,12 +36,14 @@ function* watchLoadFiles() {
 }
 
 function* decodeSelectedFile(action) {
+  const file = action.file;
+
   try {
-    const result = yield call(decodeFile, action.filename);
-    console.log(result);
-    yield put({type: DECODE_FILE_SUCCESS, filename: action.filename});
+    const result = yield call(decodeFile, file.name);
+    audioCache.set(file.id, result);
+    yield put({type: DECODE_FILE_SUCCESS, file: file});
   } catch (e) {
-    yield put({type: DECODE_FILE_FAIL, filename: action.filename});
+    yield put({type: DECODE_FILE_FAIL, file: file});
   }
 }
 

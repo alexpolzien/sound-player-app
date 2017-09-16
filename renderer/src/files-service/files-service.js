@@ -13,6 +13,7 @@ export function getFiles() {
         } else {
           const absPaths = files.map(file => {
             return {
+              id: file, // use filename for id for now
               name: file,
               path: path.join(SOUNDS_DIR, file)
             };

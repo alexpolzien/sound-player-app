@@ -22,7 +22,7 @@ export default function files(state = initialState, action) {
     case SELECT_FILE:
       return {
         ...state,
-        selectedFile: action.filename
+        selectedFile: action.file.id
       };
 
     default:

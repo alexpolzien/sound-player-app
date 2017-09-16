@@ -5,14 +5,13 @@ import React from 'react';
 export default class FileList extends React.Component {
   render() {
     const {files, selectedFile, selectFile} = this.props;
-    const fileNames = files.map(f => f.name);
 
     return (
       <ul className={styles.list}>
         {files.map(
           file =>
-            <FileItem file={file} key={file.name}
-              isSelected={file.name === selectedFile}
+            <FileItem file={file} key={file.id}
+              isSelected={file.id === selectedFile}
               selectFile={selectFile} />
           )
         }
@@ -28,7 +27,7 @@ class FileItem extends React.Component {
   }
 
   _onClick() {
-    this.props.selectFile(this.props.file.name);
+    this.props.selectFile(this.props.file);
   }
 
   render() {
