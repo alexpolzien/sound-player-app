@@ -4,6 +4,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 
 import FileListContainer from '../FileListContainer/FileListContainer.jsx';
+import PlayButtonContainer from '../PlayButtonContainer/PlayButtonContainer.jsx';
 
 export default class App extends React.Component {
   render() {
@@ -12,6 +13,7 @@ export default class App extends React.Component {
       <Provider store={store}>
         <div className={styles.app}>
           <FileListContainer />
+          <PlayButtonContainer />
         </div>
       </Provider>
     );

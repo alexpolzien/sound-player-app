@@ -3,9 +3,13 @@ class AudioCache {
     this.map = new Map();
   }
 
-  set(fileId, buffer) {
-    this.map.set(fileId, buffer);
+  getBuffer(fileId) {
     console.log(this.map);
+    return this.map.get(fileId);
+  }
+
+  setBuffer(fileId, buffer) {
+    this.map.set(fileId, buffer);
   }
 }
 
