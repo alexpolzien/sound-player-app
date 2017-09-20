@@ -1,4 +1,4 @@
-import {ipcRenderer, remote} from 'electron';
+import {ipcRenderer, remote, shell} from 'electron';
 const path = remote.require('path');
 import React from 'react';
 
@@ -27,19 +27,26 @@ class FileItem extends React.Component {
   constructor() {
     super(...arguments);
     this.onClick = this._onClick.bind(this);
+    this.anchorClick = this._anchorClick.bind(this);
+  }
+
+  get absPath() {
+    return path.join(SOUNDS_DIR, this.props.file.name);
   }
 
   componentDidMount() {
     this.li.addEventListener('dragstart', (event) => {
-      console.log('drag start');
       event.preventDefault();
-      const absPath = path.join(SOUNDS_DIR, this.props.file.name);
-      ipcRenderer.send('ondragstart', absPath);
+      ipcRenderer.send('ondragstart', this.absPath);
     });
   }
 
   _onClick() {
     this.props.selectFile(this.props.file);
+  }
+
+  _anchorClick() {
+    shell.showItemInFolder(this.absPath);
   }
 
   render() {
@@ -49,6 +56,7 @@ class FileItem extends React.Component {
       <li className={className} onClick={this.onClick}
         ref={li => { this.li = li; }} draggable="true">
         {file.name}
+        &nbsp;&nbsp;&nbsp;<a onClick={this.anchorClick}>show in finder</a>
       </li>
     );
   }
