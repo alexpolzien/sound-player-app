@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {playSelected} from '../../actions/actions';
 import PlayButton from '../PlayButton/PlayButton.jsx';
 
 class PlayButtonContainer extends React.Component {
@@ -12,11 +11,15 @@ class PlayButtonContainer extends React.Component {
 }
 
 function mapState(state) {
-  return {};
+  const fileId = state.files.selectedFile;
+  const data = state.bufferCache[fileId];
+  return {
+    bufferData: data
+  };
 }
 
 function mapDispatch(dispatch) {
-  return bindActionCreators({playSelected}, dispatch);
+  return bindActionCreators({}, dispatch);
 }
 
 export default connect(mapState, mapDispatch)(PlayButtonContainer);

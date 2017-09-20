@@ -15,8 +15,7 @@ import {
   LOAD_FILES_SUCCESS,
   SELECT_FILE,
   DECODE_FILE_SUCCESS,
-  DECODE_FILE_FAIL,
-  PLAY_SELECTED
+  DECODE_FILE_FAIL
 } from '../actions/action-types';
 import {decodeFile} from '../decode-service/decode-service';
 import {getFiles} from '../files-service/files-service';
@@ -55,20 +54,9 @@ function* watchSelectFile() {
   yield takeEvery(SELECT_FILE, decodeSelectedFile);
 }
 
-function* playSelected() {
-  const state = yield select();
-  const fileId = state.files.selectedFile;
-  player.playFile(fileId);
-}
-
-function* watchPlaySelected() {
-  yield takeLatest(PLAY_SELECTED, playSelected);
-}
-
 export default function* rootSaga() {
   yield all([
     watchLoadFiles(),
-    watchSelectFile(),
-    watchPlaySelected()
+    watchSelectFile()
   ]);
 }

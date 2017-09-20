@@ -25,7 +25,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
         const sanitizedData = {...fileData};
         sanitizedData.left = `Float32Array(${fileData.left.length})`;
         sanitizedData.right = `Float32Array(${fileData.right.length})`;
-        console.log(sanitizedData);
         sanitizedCache[fileId] = sanitizedData;
       }
 

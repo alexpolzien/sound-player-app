@@ -1,5 +1,7 @@
 import React from 'react';
 
+import player from '../../sound-player';
+
 export default class PlayButton extends React.Component {
   constructor() {
     super(...arguments);
@@ -7,7 +9,8 @@ export default class PlayButton extends React.Component {
   }
 
   _onClick(e) {
-    this.props.playSelected();
+    const {bufferData} = this.props;
+    player.play(bufferData);
   }
 
   render() {
