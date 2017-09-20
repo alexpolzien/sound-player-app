@@ -56,7 +56,7 @@ class FileItem extends React.Component {
       <li className={className} onClick={this.onClick}
         ref={li => { this.li = li; }} draggable="true">
         {file.name}
-        &nbsp;&nbsp;&nbsp;<a onClick={this.anchorClick}>show in finder</a>
+        &nbsp;-&nbsp;<a onClick={this.anchorClick}>show in finder</a>
       </li>
     );
   }

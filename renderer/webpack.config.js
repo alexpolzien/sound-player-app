@@ -14,6 +14,7 @@ module.exports = {
     },
     hot: true
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
