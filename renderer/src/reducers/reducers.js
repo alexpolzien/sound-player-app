@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
 
-import count from './count';
+import bufferCache from './buffer-cache';
 import files from './files';
 
 export default combineReducers({
-  count,
+  bufferCache,
   files
 });

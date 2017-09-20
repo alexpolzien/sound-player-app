@@ -14,7 +14,27 @@ import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 
 const sagaMiddleware = createSagaMiddleware();
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+    stateSanitizer: state => {
+      const bufferCache = state.bufferCache;
+      const sanitizedCache = {};
+
+      for (const fileId in bufferCache) {
+        const fileData = bufferCache[fileId];
+        const sanitizedData = {...fileData};
+        sanitizedData.left = `Float32Array(${fileData.left.length})`;
+        sanitizedData.right = `Float32Array(${fileData.right.length})`;
+        console.log(sanitizedData);
+        sanitizedCache[fileId] = sanitizedData;
+      }
+
+      return {
+        ...state,
+        bufferCache: sanitizedCache
+      };
+    }
+  }) : compose;
 const store = createStore(
   rootReducer,
   composeEnhancers(applyMiddleware(sagaMiddleware))

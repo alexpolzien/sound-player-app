@@ -25,12 +25,20 @@ function decodeFileBuffer(buffer) {
   return new Promise(
     (resolve, reject) => {
       const asset = AV.Asset.fromBuffer(buffer);
-      const startTime = new Date();
       asset.decodeToBuffer(data => {
-        const endTime = new Date();
-        const decodeTime = endTime - startTime;
-        console.log('time spent decoding', decodeTime);
-        resolve(data);
+        const numChannels = 2; // hard-coded to stereo for now
+        const numFrames = data.length / numChannels;
+        const leftChannel = new Float32Array(numFrames);
+        const rightChannel = new Float32Array(numFrames);
+        for (let i = 0; i < numFrames; i++) {
+          leftChannel[i] = data[i * 2];
+          rightChannel[i] = data[i * 2 + 1];
+        }
+        resolve({
+          sampleRate: asset.format.sampleRate,
+          left: leftChannel,
+          right: rightChannel
+        });
       });
     }
   );
