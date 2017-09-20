@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
@@ -34,6 +34,13 @@ function createWindow() {
 
   win.on('closed', () => {
     win = null;
+  });
+
+  ipcMain.on('ondragstart', (event, filePath) => {
+    event.sender.startDrag({
+      file: filePath,
+      icon: path.join(__dirname, 'test-icon.png')
+    });
   });
 }
 
