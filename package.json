@@ -29,6 +29,7 @@
     "webpack-dev-server": "^2.7.1"
   },
   "scripts": {
+    "build-scripts": "cd scripts && ../node_modules/webpack/bin/webpack.js",
     "main-dev": "./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron ./main/main.js",
     "renderer-dev": "cd renderer && ../node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   }
