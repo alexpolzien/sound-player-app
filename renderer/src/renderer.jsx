@@ -20,6 +20,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
       const bufferCache = state.bufferCache;
       const sanitizedCache = {};
 
+      // sanitize audo buffer data
       for (const fileId in bufferCache) {
         const fileData = bufferCache[fileId];
         const sanitizedData = {...fileData};
