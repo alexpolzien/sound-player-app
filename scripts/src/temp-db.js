@@ -1,6 +1,7 @@
 import AV from 'av';
 import fs from 'fs';
 import path from 'path';
+import {v4} from 'uuid';
 
 import {MOCK_DATA_DIR, SOUNDS_DIR} from './constants';
 
@@ -20,6 +21,7 @@ const promises = fileNames.filter(isWav).map(fileName =>
           const asset = AV.Asset.fromBuffer(fileBuffer);
           asset.decodeToBuffer(data => {
             resolve({
+              id: v4(),
               fileName,
               sampleRate: asset.format.sampleRate,
               path: absPath
@@ -40,7 +42,7 @@ Promise.all(promises).then(
         if (err) {
           throw(err);
         }
-        console.log('wrote data for ${fileInfos.length} files');
+        console.log(`wrote data for ${fileInfos.length} files`);
       }
     );
   }

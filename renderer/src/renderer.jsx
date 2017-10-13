@@ -8,7 +8,7 @@ import {AppContainer} from 'react-hot-loader';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import {LOAD_FILES} from './actions/action-types';
+import {DB_LOAD_INITIAL_RESULTS} from './actions/action-types';
 import App from './components/App/App.jsx';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
@@ -39,7 +39,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
-store.dispatch({type: LOAD_FILES});
+store.dispatch({type: DB_LOAD_INITIAL_RESULTS});
 
 function renderApp(RootComponent) {
   ReactDOM.render(
