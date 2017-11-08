@@ -5,16 +5,14 @@ import {Provider} from 'react-redux';
 
 import FileListContainer from '../FileListContainer/FileListContainer.jsx';
 import PlayButtonContainer from '../PlayButtonContainer/PlayButtonContainer.jsx';
+import ResultsList from '../ResultsList/ResultsList.jsx';
 
 export default class App extends React.Component {
   render() {
     const {store} = this.props;
     return (
       <Provider store={store}>
-        <div className={styles.app}>
-          <FileListContainer />
-          <PlayButtonContainer />
-        </div>
+        <ResultsList />
       </Provider>
     );
   }
