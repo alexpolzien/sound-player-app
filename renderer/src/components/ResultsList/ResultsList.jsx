@@ -37,16 +37,38 @@ function mapDispatch(dispatch) {
   return bindActionCreators({}, dispatch);
 }
 
+class ResultsListItem extends React.Component {
+  render() {
+    const {file} = this.props;
+    return (
+      <tr>
+        <td>{file.fileName}</td>
+        <td>{file.sampleRate}</td>
+        <td>TODO: num channels</td>
+        <td>TODO: format</td>
+      </tr>
+    );
+  }
+}
+
 class ResultsListMain extends React.Component {
   render() {
     const {files} = this.props;
 
     return (
-      <div>
-        <ul>
-          {files.map(file => <li key={file.fileId}>{file.fileName}</li>)}
-        </ul>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Sample Rate</th>
+            <th>Channels</th>
+            <th>Format</th>
+          </tr>
+        </thead>
+        <tbody>
+          {files.map(file => <ResultsListItem key={file.fileId} file={file} />)}
+        </tbody>
+      </table>
     );
   }
 }
