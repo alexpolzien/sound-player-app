@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
+import styles from './ResultsList.css';
+
 const filesSelector = state => state.resultsList.files;
 const sortedResultsSelector = createSelector(
   filesSelector,
@@ -56,7 +58,7 @@ class ResultsListMain extends React.Component {
     const {files} = this.props;
 
     return (
-      <table>
+      <table className={styles.list}>
         <thead>
           <tr>
             <th>File Name</th>
@@ -66,7 +68,7 @@ class ResultsListMain extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {files.map(file => <ResultsListItem key={file.fileId} file={file} />)}
+          {files.map(file => <ResultsListItem key={file.id} file={file} />)}
         </tbody>
       </table>
     );

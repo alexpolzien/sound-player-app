@@ -1,0 +1,35 @@
+.list {
+  background-color: #3c3c4c;
+  color: #fcfcfc;
+  font-family: Arial;
+  font-size: 13px;
+  margin: 0 auto;
+}
+
+.list th,
+.list td {
+  box-sizing: border-box;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 8px;
+  text-align: left;
+}
+
+.list td {
+  border-bottom: 1px solid #222;
+}
+
+.list tr.selected td {
+  background-color: #5c5c6c;
+}
+
+.list th {
+  background-color: #2c2c3c;
+  border-bottom: 1px solid #222;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.list tbody {
+  margin-right: 20px;
+}
