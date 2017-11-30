@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
 import styles from './ResultsList.css';
-import Throttler from '../../utils/Throttler';
+import {throttle} from '../../utils/event-processing';
 
 const filesSelector = state => state.resultsList.files;
 const sortedResultsSelector = createSelector(
@@ -78,17 +78,17 @@ class ResultsListTable extends React.Component {
     this.onResize = this._onResize.bind(this);
 
     const throttleTime = 100; // TODO: make class property
-    this.heightThrottler = new Throttler(throttleTime, this.updateHeight.bind(this));
-    this.positionThrottler = new Throttler(throttleTime, this.updateScrollPosition.bind(this));
+    this.updateScrollPosition = throttle(throttleTime, this._updateScrollPosition.bind(this));
+    this.updateHeight = throttle(throttleTime, this._updateHeight.bind(this));
   }
 
   _onScroll(e) {
-    this.positionThrottler.throttle(e.target.scrollTop);
+    this.updateScrollPosition(e.target.scrollTop);
   }
 
   _onResize(e) {
     if (this.container) {
-      this.heightThrottler.throttle(this.container.offsetHeight);
+      this.updateHeight(this.container.offsetHeight);
     }
   }
 
@@ -100,12 +100,12 @@ class ResultsListTable extends React.Component {
     window.removeEventListener('resize', this.onResize);
   }
 
-  updateScrollPosition(position) {
+  _updateScrollPosition(position) {
     console.log('update scroll position', position);
     this.setState({scrollPosition: position});
   }
 
-  updateHeight(height) {
+  _updateHeight(height) {
     console.log('update height', height);
     this.setState({scrollHeight: height});
   }
