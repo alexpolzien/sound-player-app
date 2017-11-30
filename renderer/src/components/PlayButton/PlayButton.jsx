@@ -1,19 +1,16 @@
 import React from 'react';
 
-import player from '../../sound-player';
+import styles from './PlayButton.css';
 
 export default class PlayButton extends React.Component {
-  constructor() {
-    super(...arguments);
-    this.onClick = this._onClick.bind(this);
-  }
-
-  _onClick(e) {
-    const {bufferData} = this.props;
-    player.play(bufferData);
-  }
-
   render() {
-    return <button onClick={this.onClick}>Play!!!</button>;
+    return (
+      <div className={styles.container}>
+        <div className={styles.button}>
+          <div className={styles.triangle}></div>
+          <div className={styles.pauseBlocks}></div>
+        </div>
+      </div>
+    );
   }
 }

@@ -1,0 +1,32 @@
+.container {
+  background-color: #2c2c3c;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: auto 65px auto;
+  grid-template-rows: 100%;
+
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.item {
+  grid-row: 1 / 1;
+  position: relative;
+}
+
+.leftSide {
+  composes: item;
+  grid-column: 1 / 2;
+}
+
+.rightSide {
+  composes: item;
+  grid-column: 3 / 4;
+}
+
+.playButtonContainer {
+  composes: item;
+  grid-column: 2 / 3;
+}

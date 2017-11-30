@@ -1,5 +1,6 @@
 import React from 'react';
 
+import PlaybackControls from '../PlaybackControls/PlaybackControls.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
 import styles from './AppLayout.css';
 
@@ -11,7 +12,10 @@ export default class AppLayout extends React.Component {
           <ResultsList />
         </div>
         <div className={styles.player}>
-          player here
+          wave display
+        </div>
+        <div className={styles.playbackControls}>
+          <PlaybackControls />
         </div>
       </div>
     );

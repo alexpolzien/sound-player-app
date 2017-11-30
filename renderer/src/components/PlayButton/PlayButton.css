@@ -1,0 +1,50 @@
+.container {
+  composes: absolute100 from '../../global-classes.css';
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  align-items: center;
+  border: 2px solid #fcfcfc;
+  border-radius: 22.5px;
+  box-sizing: border-box;
+  display: flex;
+  height: 45px;
+  justify-content: center;
+  top: 10px;
+  width: 45px;
+}
+
+.triangle {
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid #fcfcfc;
+  border-top: 8px solid transparent;
+  height: 0;
+  position: relative;
+  left: 2px;
+  width: 0;
+}
+
+.pauseBlocks {
+  box-sizing: border-box;
+  height: 16px;
+  position: relative;
+  width: 14px;
+}
+
+.pauseBlocks:before,
+.pauseBlocks:after {
+  background-color: #fcfcfc;
+  bottom: 0;
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 4px;
+}
+
+.pauseBlocks:after {
+  right: 0;
+}
