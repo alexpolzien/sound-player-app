@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
 import styles from './ResultsList.css';
-import {throttle} from '../../utils/event-processing';
+import {throttleAnimationFrame} from '../../utils/event-processing';
 
 const filesSelector = state => state.resultsList.files;
 const sortedResultsSelector = createSelector(
@@ -40,7 +40,7 @@ function mapDispatch(dispatch) {
   return bindActionCreators({}, dispatch);
 }
 
-class ResultsListItem extends React.Component {
+class ResultsListItem extends React.PureComponent {
   render() {
     const {file, top} = this.props;
     return (
@@ -54,7 +54,6 @@ class ResultsListItem extends React.Component {
   }
 }
 
-// TODO: fix width difference due to scrollbar
 class Header extends React.Component {
   render() {
     return (
@@ -68,8 +67,8 @@ class Header extends React.Component {
   }
 }
 
-class ScrollList extends React.Component {
-  static numPaddingRows = 10;
+class ScrollList extends React.PureComponent {
+  static paddingPages = 2;
   static rowHeight = 20;
   static throttleTime = 100;
 
@@ -82,8 +81,8 @@ class ScrollList extends React.Component {
     this.onScroll = this._onScroll.bind(this);
     this.onResize = this._onResize.bind(this);
 
-    this.updateScrollPosition = throttle(this.throttleTime, this._updateScrollPosition.bind(this));
-    this.updateHeight = throttle(this.throttleTime, this._updateHeight.bind(this));
+    this.updateScrollPosition = throttleAnimationFrame(this._updateScrollPosition.bind(this));
+    this.updateHeight = throttleAnimationFrame(this._updateHeight.bind(this));
   }
 
   _onScroll(e) {
@@ -118,10 +117,11 @@ class ScrollList extends React.Component {
     const scrollTop = this.container ? this.container.scrollTop : 0;
     const viewportHeight = this.container ? this.container.offsetHeight : 0;
 
-    const topRowsHidden = Math.max(0, Math.floor(scrollTop / this.constructor.rowHeight) - this.constructor.numPaddingRows);
     const rowsInViewport = Math.ceil(viewportHeight / this.constructor.rowHeight);
+    const paddingRows = rowsInViewport * this.constructor.paddingPages;
+    const topRowsHidden = Math.max(0, Math.floor(scrollTop / this.constructor.rowHeight) - paddingRows);
 
-    const visibleFiles = files.slice(topRowsHidden, topRowsHidden + rowsInViewport + this.constructor.numPaddingRows);
+    const visibleFiles = files.slice(topRowsHidden, topRowsHidden + rowsInViewport + paddingRows * 2);
 
     return (
       <div className={styles.scrollList}

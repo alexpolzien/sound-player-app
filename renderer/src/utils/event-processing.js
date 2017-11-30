@@ -40,3 +40,18 @@ export function throttle(time, callback) {
     }
   }
 }
+
+export function throttleAnimationFrame(callback) {
+  let animation = null;
+  let lastArgs = [];
+
+  return function() {
+    lastArgs = [...arguments];
+    if (!animation) {
+      animation = window.requestAnimationFrame(() => {
+        callback.apply({}, lastArgs);
+        animation = null;
+      });
+    }
+  }
+}

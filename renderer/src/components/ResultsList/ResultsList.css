@@ -59,9 +59,6 @@
   padding: 0 8px;
 }
 
-.resultsTable td {
-}
-
 .resultsTable tr.selected td {
   background-color: #5c5c6c;
 }
