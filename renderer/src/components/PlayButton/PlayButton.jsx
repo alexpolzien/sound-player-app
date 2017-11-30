@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {togglePlayback} from '../../actions/actions';
+import {SPACEBAR} from '../../constants';
 import styles from './PlayButton.css';
 
 function mapState(state) {
@@ -22,11 +23,27 @@ class PlayButtonMain extends React.Component {
   constructor() {
     super(...arguments);
     this.onClick = this._onClick.bind(this);
+    this.onKeyDown = this._onKeyDown.bind(this);
   }
 
   _onClick(e) {
     e.preventDefault();
     this.props.togglePlayback();
+  }
+
+  _onKeyDown(e) {
+    if (e.keyCode === SPACEBAR) {
+      e.preventDefault();
+      this.props.togglePlayback();
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.onKeyDown);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown);
   }
 
   render() {
