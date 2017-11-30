@@ -1,9 +1,11 @@
 import {
-  DB_LOAD_INITIAL_RESULTS_SUCCESS
+  DB_LOAD_INITIAL_RESULTS_SUCCESS,
+  LIST_SELECT_FILE
 } from '../actions/action-types';
 
 const initialState = {
-  files: {}
+  files: {},
+  selectedId: null
 };
 
 export default function resultsList(state = initialState, action) {
@@ -16,6 +18,11 @@ export default function resultsList(state = initialState, action) {
       return {
         ...state,
         files
+      };
+    case LIST_SELECT_FILE:
+      return {
+        ...state,
+        selectedId: action.id
       };
     default:
       return state;

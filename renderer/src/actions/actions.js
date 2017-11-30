@@ -1,10 +1,10 @@
 import {
-  SELECT_FILE
+  LIST_SELECT_FILE
 } from './action-types';
 
-export function selectFile(file) {
+export function selectFile(id) {
   return {
-    type: SELECT_FILE,
-    file
+    type: LIST_SELECT_FILE,
+    id
   };
 }

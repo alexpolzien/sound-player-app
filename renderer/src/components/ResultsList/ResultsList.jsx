@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
+import {selectFile} from '../../actions/actions';
 import styles from './ResultsList.css';
 import {throttleAnimationFrame} from '../../utils/event-processing';
 
@@ -32,19 +33,29 @@ const sortedResultsSelector = createSelector(
 
 function mapState(state) {
   return {
-    files: sortedResultsSelector(state)
+    files: sortedResultsSelector(state),
+    selectedFileId: state.resultsList.selectedId
   };
 }
 
 function mapDispatch(dispatch) {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators({selectFile}, dispatch);
 }
 
 class ResultsListItem extends React.PureComponent {
+  constructor() {
+    super(...arguments);
+    this.onClick = this._onClick.bind(this);
+  }
+
+  _onClick() {
+    this.props.selectFile(this.props.file.id);
+  }
+
   render() {
-    const {file, top} = this.props;
+    const {file, isSelected, top} = this.props;
     return (
-      <li style={{top: top}}>
+      <li className={isSelected ? styles.selectedItem : ''} style={{top: top}} onClick={this.onClick}>
         <div className={styles.fileNameCell}>{file.fileName}</div>
         <div className={styles.otherCell}>{file.sampleRate}</div>
         <div className={styles.otherCell}>TODO: num channels</div>
@@ -112,7 +123,7 @@ class ScrollList extends React.PureComponent {
   }
 
   render() {
-    const {files} = this.props;
+    const {files, selectFile, selectedFileId} = this.props;
     const totalHeight = files.length * this.constructor.rowHeight;
     const scrollTop = this.container ? this.container.scrollTop : 0;
     const viewportHeight = this.container ? this.container.offsetHeight : 0;
@@ -128,7 +139,16 @@ class ScrollList extends React.PureComponent {
           onScroll={this.onScroll}
           ref={div => { this.container = div; }}>
           <ul style={{height: totalHeight}}>
-            {visibleFiles.map((file, i) => <ResultsListItem key={file.id} file={file} top={(i + topRowsHidden) * this.constructor.rowHeight}/>)}
+            {visibleFiles.map((file, i) =>
+              {
+                const top = (i + topRowsHidden) * this.constructor.rowHeight;
+                const isSelected = file.id === selectedFileId;
+                return (
+                  <ResultsListItem key={file.id} file={file} top={top}
+                    selectFile={selectFile} isSelected={isSelected} />
+                );
+              }
+            )}
           </ul>
       </div>
     );
@@ -137,12 +157,12 @@ class ScrollList extends React.PureComponent {
 
 class ResultsListMain extends React.Component {
   render() {
-    const {files} = this.props;
+    const {files, selectFile, selectedFileId} = this.props;
 
     return (
       <div className={styles.list}>
         <Header />
-        <ScrollList files={files} />
+        <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId} />
       </div>
     );
   }
