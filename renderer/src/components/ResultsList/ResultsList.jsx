@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
 import {selectFile} from '../../actions/actions';
+import {UP_ARROW_KEY, DOWN_ARROW_KEY} from '../../constants';
 import styles from './ResultsList.css';
 import {throttleAnimationFrame} from '../../utils/event-processing';
 
@@ -89,6 +90,7 @@ class ScrollList extends React.PureComponent {
       scrollPosition: 0,
       scrollHeight: 0
     };
+    this.onKeyDown = this._onKeyDown.bind(this);
     this.onScroll = this._onScroll.bind(this);
     this.onResize = this._onResize.bind(this);
 
@@ -104,6 +106,49 @@ class ScrollList extends React.PureComponent {
     if (this.container) {
       this.updateHeight(this.container.offsetHeight);
     }
+  }
+
+  _onKeyDown(e) {
+    // prevent default scroll
+    const keyCode = e.keyCode;
+
+    if (keyCode === UP_ARROW_KEY || keyCode === DOWN_ARROW_KEY) {
+      e.preventDefault();
+    } else {
+      return;
+    }
+
+    const {files, selectFile, selectedFileId} = this.props;
+    if (!files.length) {
+      return;
+    }
+
+    let fileToSelect;
+
+    // select top or bottom if none currently selected
+    if (!selectedFileId) {
+      if (keyCode === UP_ARROW_KEY) {
+        fileToSelect = files[0];
+      } else if (keyCode === DOWN_ARROW_KEY) {
+        fileToSelect = files[file.length - 1];
+      }
+    } else {
+      let selectedIndex = files.findIndex(file => file.id === selectedFileId);
+      if (keyCode === UP_ARROW_KEY) {
+        selectedIndex --;
+      } else if (keyCode === DOWN_ARROW_KEY) {
+        selectedIndex++;
+      }
+      if (selectedIndex === -1) {
+        selectedIndex = files.length - 1;
+      } else if (selectedIndex === files.length) {
+        selectedIndex = 0;
+      }
+      fileToSelect = files[selectedIndex];
+    }
+
+    // TODO: scroll to selected
+    selectFile(fileToSelect.id);
   }
 
   componentDidMount() {
@@ -138,7 +183,7 @@ class ScrollList extends React.PureComponent {
       <div className={styles.scrollList}
           onScroll={this.onScroll}
           ref={div => { this.container = div; }}>
-          <ul style={{height: totalHeight}}>
+          <ul style={{height: totalHeight}} onKeyDown={this.onKeyDown} tabIndex="0">
             {visibleFiles.map((file, i) =>
               {
                 const top = (i + topRowsHidden) * this.constructor.rowHeight;
