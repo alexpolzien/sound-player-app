@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
+import Debouncer from '../../utils/Debouncer';
 import styles from './ResultsList.css';
 
 const filesSelector = state => state.resultsList.files;
@@ -67,11 +68,56 @@ class ResultsListHeader extends React.Component {
 }
 
 class ResultsListTable extends React.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      scrollPosition: 0,
+      scrollHeight: 0
+    };
+    this.onScroll = this._onScroll.bind(this);
+    this.onResize = this._onResize.bind(this);
+    //this.scrollDebouncer = new Debouncer(100, this.updateScroll.bind(this));
+
+    const debounceTime = 100; // TODO: make class property
+    this.heightDebouncer = new Debouncer(debounceTime, this.updateHeight.bind(this));
+    this.positionDebouncer = new Debouncer(debounceTime, this.updateScrollPosition.bind(this));
+  }
+
+  _onScroll(e) {
+    this.positionDebouncer.debounce(e.target.scrollTop);
+  }
+
+  _onResize(e) {
+    if (this.container) {
+      this.heightDebouncer.debounce(this.container.offsetHeight);
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  updateScrollPosition(position) {
+    console.log('update scroll position', position);
+    this.setState({scrollPosition: position});
+  }
+
+  updateHeight(height) {
+    console.log('update height', height);
+    this.setState({scrollHeight: height});
+  }
+
   render() {
     const {files} = this.props;
 
     return (
-      <div className={styles.resultsTableContainer}>
+      <div className={styles.resultsTableContainer}
+          onScroll={this.onScroll}
+          ref={div => { this.container = div; }}>
         <table className={styles.resultsTable}>
           <tbody>
             {files.map(file => <ResultsListItem key={file.id} file={file} />)}
