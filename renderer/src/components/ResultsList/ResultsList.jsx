@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
-import Debouncer from '../../utils/Debouncer';
 import styles from './ResultsList.css';
+import Throttler from '../../utils/Throttler';
 
 const filesSelector = state => state.resultsList.files;
 const sortedResultsSelector = createSelector(
@@ -76,20 +76,19 @@ class ResultsListTable extends React.Component {
     };
     this.onScroll = this._onScroll.bind(this);
     this.onResize = this._onResize.bind(this);
-    //this.scrollDebouncer = new Debouncer(100, this.updateScroll.bind(this));
 
-    const debounceTime = 100; // TODO: make class property
-    this.heightDebouncer = new Debouncer(debounceTime, this.updateHeight.bind(this));
-    this.positionDebouncer = new Debouncer(debounceTime, this.updateScrollPosition.bind(this));
+    const throttleTime = 100; // TODO: make class property
+    this.heightThrottler = new Throttler(throttleTime, this.updateHeight.bind(this));
+    this.positionThrottler = new Throttler(throttleTime, this.updateScrollPosition.bind(this));
   }
 
   _onScroll(e) {
-    this.positionDebouncer.debounce(e.target.scrollTop);
+    this.positionThrottler.throttle(e.target.scrollTop);
   }
 
   _onResize(e) {
     if (this.container) {
-      this.heightDebouncer.debounce(this.container.offsetHeight);
+      this.heightThrottler.throttle(this.container.offsetHeight);
     }
   }
 

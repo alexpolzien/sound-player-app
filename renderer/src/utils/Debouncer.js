@@ -24,6 +24,7 @@ export default class Debouncer {
     // call the callback with a timeout
     this.timer = setTimeout(() => {
       this.callback.apply(null, args);
+      this.timer = null;
     }, this.time);
   }
 }
