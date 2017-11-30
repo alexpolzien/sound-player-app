@@ -198,6 +198,33 @@ class ScrollList extends React.PureComponent {
       </div>
     );
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    const {files, selectedFileId} = this.props;
+    if (this.container && selectedFileId && selectedFileId !== prevProps.selectedFileId) {
+      // if the selected file changed, and it is not in the viewport, scroll to it
+      const top = this.container.scrollTop;
+      const viewportHeight = this.container.offsetHeight;
+      const bottom = top + viewportHeight;
+      const rowHeight = this.constructor.rowHeight;
+
+      // find selected files position
+      const index = files.findIndex(file => file.id === selectedFileId);
+      const position = index * rowHeight;
+
+      let newScrollTop;
+      // is it above or below the viewport?
+      if (position < top) {
+        newScrollTop = position;
+      } else if (position + rowHeight > bottom) {
+        newScrollTop = Math.max(0, position - viewportHeight + rowHeight);
+      }
+
+      if (newScrollTop) {
+        this.container.scrollTop = newScrollTop; // TODO: trigger onScroll?
+      }
+    }
+  }
 }
 
 class ResultsListMain extends React.Component {
