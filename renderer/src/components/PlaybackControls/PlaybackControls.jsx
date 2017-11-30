@@ -1,7 +1,7 @@
 import React from 'react';
 
-import PlayButton from '../PlayButton/PlayButton.jsx';
 import styles from './PlaybackControls.css';
+import PlayButton from '../PlayButton/PlayButton.jsx';
 
 export default class PlaybackControls extends React.Component {
   render() {

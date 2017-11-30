@@ -12,3 +12,6 @@ export const DB_LOAD_INITIAL_RESULTS_SUCCESS = 'DB_LOAD_INITIAL_RESULTS_SUCCESS'
 
 // results list
 export const LIST_SELECT_FILE = 'LIST_SELECT_FILE';
+
+// play controls
+export const PLAYBACK_TOGGLE_PLAY = 'PLAYBACK_TOGGLE_PLAY';
