@@ -38,7 +38,11 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: ['react'],
-              plugins: ['transform-object-rest-spread', 'react-hot-loader/babel']
+              plugins: [
+                'transform-object-rest-spread',
+                'transform-class-properties',
+                'react-hot-loader/babel'
+              ]
             }
           }
         ]

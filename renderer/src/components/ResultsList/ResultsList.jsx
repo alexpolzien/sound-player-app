@@ -42,19 +42,20 @@ function mapDispatch(dispatch) {
 
 class ResultsListItem extends React.Component {
   render() {
-    const {file} = this.props;
+    const {file, top} = this.props;
     return (
-      <tr>
-        <td className={styles.fileNameCell}>{file.fileName}</td>
-        <td className={styles.otherCell}>{file.sampleRate}</td>
-        <td className={styles.otherCell}>TODO: num channels</td>
-        <td className={styles.otherCell}>TODO: format</td>
-      </tr>
+      <li style={{top: top}}>
+        <div className={styles.fileNameCell}>{file.fileName}</div>
+        <div className={styles.otherCell}>{file.sampleRate}</div>
+        <div className={styles.otherCell}>TODO: num channels</div>
+        <div className={styles.otherCell}>TODO: format</div>
+      </li>
     );
   }
 }
 
-class ResultsListHeader extends React.Component {
+// TODO: fix width difference due to scrollbar
+class Header extends React.Component {
   render() {
     return (
       <div className={styles.header}>
@@ -67,7 +68,11 @@ class ResultsListHeader extends React.Component {
   }
 }
 
-class ResultsListTable extends React.Component {
+class ScrollList extends React.Component {
+  static numPaddingRows = 10;
+  static rowHeight = 20;
+  static throttleTime = 100;
+
   constructor() {
     super(...arguments);
     this.state = {
@@ -77,9 +82,8 @@ class ResultsListTable extends React.Component {
     this.onScroll = this._onScroll.bind(this);
     this.onResize = this._onResize.bind(this);
 
-    const throttleTime = 100; // TODO: make class property
-    this.updateScrollPosition = throttle(throttleTime, this._updateScrollPosition.bind(this));
-    this.updateHeight = throttle(throttleTime, this._updateHeight.bind(this));
+    this.updateScrollPosition = throttle(this.throttleTime, this._updateScrollPosition.bind(this));
+    this.updateHeight = throttle(this.throttleTime, this._updateHeight.bind(this));
   }
 
   _onScroll(e) {
@@ -101,27 +105,31 @@ class ResultsListTable extends React.Component {
   }
 
   _updateScrollPosition(position) {
-    console.log('update scroll position', position);
     this.setState({scrollPosition: position});
   }
 
   _updateHeight(height) {
-    console.log('update height', height);
     this.setState({scrollHeight: height});
   }
 
   render() {
     const {files} = this.props;
+    const totalHeight = files.length * this.constructor.rowHeight;
+    const scrollTop = this.container ? this.container.scrollTop : 0;
+    const viewportHeight = this.container ? this.container.offsetHeight : 0;
+
+    const topRowsHidden = Math.max(0, Math.floor(scrollTop / this.constructor.rowHeight) - this.constructor.numPaddingRows);
+    const rowsInViewport = Math.ceil(viewportHeight / this.constructor.rowHeight);
+
+    const visibleFiles = files.slice(topRowsHidden, topRowsHidden + rowsInViewport + this.constructor.numPaddingRows);
 
     return (
-      <div className={styles.resultsTableContainer}
+      <div className={styles.scrollList}
           onScroll={this.onScroll}
           ref={div => { this.container = div; }}>
-        <table className={styles.resultsTable}>
-          <tbody>
-            {files.map(file => <ResultsListItem key={file.id} file={file} />)}
-          </tbody>
-        </table>
+          <ul style={{height: totalHeight}}>
+            {visibleFiles.map((file, i) => <ResultsListItem key={file.id} file={file} top={(i + topRowsHidden) * this.constructor.rowHeight}/>)}
+          </ul>
       </div>
     );
   }
@@ -133,8 +141,8 @@ class ResultsListMain extends React.Component {
 
     return (
       <div className={styles.list}>
-        <ResultsListHeader />
-        <ResultsListTable files={files} />
+        <Header />
+        <ScrollList files={files} />
       </div>
     );
   }
