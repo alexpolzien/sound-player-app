@@ -1,13 +1,50 @@
 .list {
   background-color: #3c3c4c;
+  bottom: 0;
   color: #fcfcfc;
   font-family: Arial;
   font-size: 13px;
-  margin: 0 auto;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
-.list th,
-.list td {
+.header {
+  background-color: #2c2c3c;
+  height: 24px;
+}
+.header > div {
+  box-sizing: border-box;
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 8px;
+}
+
+.fileNameCell {
+  width: 40%;
+}
+.otherCell {
+  width: 20%;
+}
+
+.resultsTableContainer {
+  bottom: 0;
+  left: 0;
+  overflow-y: scroll;
+  position: absolute;
+  right: 0;
+  top: 24px;
+}
+
+.resultsTable {
+  width: 100%;
+}
+
+.resultsTable th,
+.resultsTable td {
   box-sizing: border-box;
   height: 20px;
   line-height: 20px;
@@ -15,21 +52,21 @@
   text-align: left;
 }
 
-.list td {
+.resultsTable td {
   border-bottom: 1px solid #222;
 }
 
-.list tr.selected td {
+.resultsTable tr.selected td {
   background-color: #5c5c6c;
 }
 
-.list th {
+.resultsTable th {
   background-color: #2c2c3c;
   border-bottom: 1px solid #222;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-.list tbody {
+.resultsTable tbody {
   margin-right: 20px;
 }

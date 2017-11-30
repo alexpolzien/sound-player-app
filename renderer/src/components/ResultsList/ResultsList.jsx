@@ -44,11 +44,40 @@ class ResultsListItem extends React.Component {
     const {file} = this.props;
     return (
       <tr>
-        <td>{file.fileName}</td>
-        <td>{file.sampleRate}</td>
-        <td>TODO: num channels</td>
-        <td>TODO: format</td>
+        <td className={styles.fileNameCell}>{file.fileName}</td>
+        <td className={styles.otherCell}>{file.sampleRate}</td>
+        <td className={styles.otherCell}>TODO: num channels</td>
+        <td className={styles.otherCell}>TODO: format</td>
       </tr>
+    );
+  }
+}
+
+class ResultsListHeader extends React.Component {
+  render() {
+    return (
+      <div className={styles.header}>
+        <div className={styles.fileNameCell}>File Name</div>
+        <div className={styles.otherCell}>Sample Rate</div>
+        <div className={styles.otherCell}>Channels</div>
+        <div className={styles.otherCell}>Format</div>
+      </div>
+    );
+  }
+}
+
+class ResultsListTable extends React.Component {
+  render() {
+    const {files} = this.props;
+
+    return (
+      <div className={styles.resultsTableContainer}>
+        <table className={styles.resultsTable}>
+          <tbody>
+            {files.map(file => <ResultsListItem key={file.id} file={file} />)}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }
@@ -58,19 +87,10 @@ class ResultsListMain extends React.Component {
     const {files} = this.props;
 
     return (
-      <table className={styles.list}>
-        <thead>
-          <tr>
-            <th>File Name</th>
-            <th>Sample Rate</th>
-            <th>Channels</th>
-            <th>Format</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map(file => <ResultsListItem key={file.id} file={file} />)}
-        </tbody>
-      </table>
+      <div className={styles.list}>
+        <ResultsListHeader />
+        <ResultsListTable files={files} />
+      </div>
     );
   }
 }
