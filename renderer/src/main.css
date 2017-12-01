@@ -47,6 +47,20 @@ table {
 	border-spacing: 0;
 }
 
+/* additional resets */
+button {
+	-webkit-appearance: none;
+	-webkit-font-smoothing: inherit;
+	background: transparent;
+	border: none;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	margin: 0;
+	outline: none;
+	padding: 0;
+}
+
 /* global styles */
 body {
   font-family: Arial, sans-serif;

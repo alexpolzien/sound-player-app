@@ -1,5 +1,6 @@
 import {
   LIST_SELECT_FILE,
+  PLAYBACK_TOGGLE_AUTO_PLAY,
   PLAYBACK_TOGGLE_PLAY
 } from './action-types';
 
@@ -8,6 +9,10 @@ export function selectFile(id) {
     type: LIST_SELECT_FILE,
     id
   };
+}
+
+export function toggleAutoPlay() {
+  return {type: PLAYBACK_TOGGLE_AUTO_PLAY};
 }
 
 export function togglePlayback() {
