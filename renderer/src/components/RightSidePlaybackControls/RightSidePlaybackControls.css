@@ -1,0 +1,7 @@
+.container {
+  composes: absolute100 from '../../global-classes.css';
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 8px;
+}

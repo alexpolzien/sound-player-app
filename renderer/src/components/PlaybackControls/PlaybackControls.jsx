@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './PlaybackControls.css';
 import LeftSidePlaybackControls from '../LeftSidePlaybackControls/LeftSidePlaybackControls.jsx';
 import PlayButton from '../PlayButton/PlayButton.jsx';
+import RightSidePlaybackControls from '../RightSidePlaybackControls/RightSidePlaybackControls.jsx';
 
 export default class PlaybackControls extends React.Component {
   render() {
@@ -14,7 +15,9 @@ export default class PlaybackControls extends React.Component {
         <div className={styles.playButtonContainer}>
           <PlayButton />
         </div>
-        <div className={styles.rightSide}></div>
+        <div className={styles.rightSide}>
+          <RightSidePlaybackControls />
+        </div>
       </div>
     );
   }
