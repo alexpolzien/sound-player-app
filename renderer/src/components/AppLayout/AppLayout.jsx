@@ -2,6 +2,7 @@ import React from 'react';
 
 import PlaybackControls from '../PlaybackControls/PlaybackControls.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
+import SoundDisplay from '../SoundDisplay/SoundDisplay.jsx';
 import styles from './AppLayout.css';
 
 export default class AppLayout extends React.Component {
@@ -12,7 +13,7 @@ export default class AppLayout extends React.Component {
           <ResultsList />
         </div>
         <div className={styles.player}>
-          wave display
+          <SoundDisplay />
         </div>
         <div className={styles.playbackControls}>
           <PlaybackControls />

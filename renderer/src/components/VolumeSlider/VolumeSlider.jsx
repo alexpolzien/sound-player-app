@@ -16,6 +16,7 @@ function mapDispatch(dispatch) {
   return bindActionCreators({setVolume}, dispatch);
 }
 
+// TODO: make right side darker
 class VolumeSliderMain extends React.Component {
   static trackLength = 100;
   static knobSize = 15;

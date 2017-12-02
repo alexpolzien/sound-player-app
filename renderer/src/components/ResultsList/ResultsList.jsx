@@ -50,7 +50,7 @@ class ResultsListItem extends React.PureComponent {
   }
 
   _onClick() {
-    this.props.selectFile(this.props.file.id);
+    this.props.selectFile(this.props.file);
   }
 
   render() {
@@ -147,8 +147,7 @@ class ScrollList extends React.PureComponent {
       fileToSelect = files[selectedIndex];
     }
 
-    // TODO: scroll to selected
-    selectFile(fileToSelect.id);
+    selectFile(fileToSelect);
   }
 
   componentDidMount() {

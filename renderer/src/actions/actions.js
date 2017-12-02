@@ -1,14 +1,14 @@
 import {
-  LIST_SELECT_FILE,
   PLAYBACK_SET_VOLUME,
   PLAYBACK_TOGGLE_AUTO_PLAY,
-  PLAYBACK_TOGGLE_PLAY
+  PLAYBACK_TOGGLE_PLAY,
+  SELECT_FILE
 } from './action-types';
 
-export function selectFile(id) {
+export function selectFile(file) {
   return {
-    type: LIST_SELECT_FILE,
-    id
+    type: SELECT_FILE,
+    file
   };
 }
 

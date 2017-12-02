@@ -18,13 +18,6 @@ export default function files(state = initialState, action) {
         loading: false,
         files: action.files
       };
-
-    case SELECT_FILE:
-      return {
-        ...state,
-        selectedFile: action.file.id
-      };
-
     default:
       return state;
   }

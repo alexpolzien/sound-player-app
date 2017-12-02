@@ -1,6 +1,6 @@
 import {
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
-  LIST_SELECT_FILE
+  LIST_SELECT_FILE_ID
 } from '../actions/action-types';
 
 const initialState = {
@@ -19,7 +19,7 @@ export default function resultsList(state = initialState, action) {
         ...state,
         files
       };
-    case LIST_SELECT_FILE:
+    case LIST_SELECT_FILE_ID:
       return {
         ...state,
         selectedId: action.id

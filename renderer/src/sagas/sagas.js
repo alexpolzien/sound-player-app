@@ -9,33 +9,40 @@ import {
 } from 'redux-saga/effects';
 
 import {
+  BUFFER_FETCHED_FROM_CACHE_SUCCESS,
   DB_LOAD_INITIAL_RESULTS,
   DB_LOAD_INITIAL_RESULTS_FAIL,
   DB_LOAD_INITIAL_RESULTS_START,
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
-  DECODE_FILE_SUCCESS,
-  DECODE_FILE_FAIL
+  LIST_SELECT_FILE_ID,
+  SELECT_FILE
 } from '../actions/action-types';
+import {SOUNDS_DIR} from '../constants';
+import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
-import {decodeFile} from '../decode-service/decode-service';
 
-function* decodeSelectedFile(action) {
+function* selectFile(action) {
   const file = action.file;
+  // update selected file in UI
+  yield put({
+    type: LIST_SELECT_FILE_ID,
+    id: file.id
+  });
 
-  try {
-    const result = yield call(decodeFile, file.name);
-    yield put({
-      type: DECODE_FILE_SUCCESS,
-      file: file,
-      data: result
-    });
-  } catch (e) {
-    yield put({type: DECODE_FILE_FAIL, file: file});
-  }
+  // TODO: clear the old buffer?
+
+  // get the file buffer
+  const buffer = yield call(getBufferData, file.path);
+  // TODO handle failure
+  yield put({
+    type: BUFFER_FETCHED_FROM_CACHE_SUCCESS,
+    file,
+    buffer
+  });
 }
 
 function* watchSelectFile() {
-  yield takeEvery(SELECT_FILE, decodeSelectedFile);
+  yield takeEvery(SELECT_FILE, selectFile);
 }
 
 function* dbLoadInitialResults() {
@@ -57,6 +64,7 @@ function* watchDbLoadInitialResults() {
 
 export default function* rootSaga() {
   yield all([
-    watchDbLoadInitialResults()
+    watchDbLoadInitialResults(),
+    watchSelectFile()
   ]);
 }
