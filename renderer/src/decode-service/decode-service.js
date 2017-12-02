@@ -1,9 +1,6 @@
 import AV from 'av';
 import {remote} from 'electron';
 const fs = remote.require('fs');
-const path = remote.require('path');
-
-import {SOUNDS_DIR} from '../constants';
 
 function getFileBuffer(filePath) {
   return new Promise(
@@ -44,7 +41,7 @@ function decodeFileBuffer(buffer) {
   );
 }
 
-export function decodeFile(filename) {
-  const filePath = path.join(SOUNDS_DIR, filename);
+export function decodeFile(filePath) {
+  //const filePath = path.join(SOUNDS_DIR, filename);
   return getFileBuffer(filePath).then(decodeFileBuffer);
 }
