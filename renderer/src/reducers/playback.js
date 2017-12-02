@@ -5,7 +5,8 @@ import {
 
 const initialState = {
   autoPlay: false,
-  isPlaying: false
+  isPlaying: false,
+  volume: 0.8 // 0.0 - 1.0
 };
 
 export default function playback(state = initialState, action) {
