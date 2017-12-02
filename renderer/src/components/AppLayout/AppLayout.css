@@ -24,7 +24,6 @@
 .player {
   composes: gridItem;
 
-  background-color: #ccccff;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 2;
@@ -34,7 +33,6 @@
 .playbackControls {
   composes: gridItem;
 
-  background-color: #ffcccc;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 3;

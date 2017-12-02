@@ -1,0 +1,12 @@
+.container {
+  composes: absolute100 from '../../global-classes.css';
+  background-color: #2c2c3c;
+}
+
+.wave {
+  bottom: 0px;
+  left: 16px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
