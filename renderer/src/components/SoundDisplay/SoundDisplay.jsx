@@ -7,8 +7,8 @@ import WaveformView from '../WaveformView/WaveformView.jsx'
 
 function mapState(state) {
   return {
-    file: state.audioBuffer.file,
-    buffer: state.audioBuffer.buffer
+    file: state.audioCache.file,
+    buffer: state.audioCache.buffer
   };
 }
 
