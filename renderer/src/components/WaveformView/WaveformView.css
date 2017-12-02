@@ -7,6 +7,8 @@
 
 .channel {
   background-color: #3c3c4c;
+  overflow: hidden;
+  position: relative;
 }
 
 .leftChannel {
