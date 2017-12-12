@@ -36,13 +36,12 @@ class WaveformCanvas extends React.Component {
 
     if (wave) {
       const numSamples = wave.length;
-      this.ctx.fillStyle = 'rgb(0, 0, 255)';
+      this.ctx.fillStyle = 'rgb(160, 196, 255)';
       const halfY = height / 2;
-      const midY = halfY;
 
       for (let x = 0; x < width; x++) {
         const wavePosition = Math.round((x / width) * numSamples);
-        const waveValue = Math.abs(wave[wavePosition]);
+        const waveValue = wave[wavePosition];
 
         const barHeight = waveValue * halfY;
 
