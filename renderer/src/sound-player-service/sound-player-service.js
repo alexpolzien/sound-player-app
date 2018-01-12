@@ -11,13 +11,14 @@ class SoundPlayer {
     this.playStartTime = null;
     this.bufferSrc = null;
     this.playingFile = null;
+    this.playingFileBuffer = null;
     this.onStop = eventCallbacks.onStop;
     this.updatePlaybackPosition = this._updatePlaybackPosition.bind(this);
     this.updatePlaybackPosition();
-    this.onPlaybackPosition = null;
+    this.playbackPositionListeners = [];
   }
 
-  playFromBuffer(fileBuffer) {
+  playFromBuffer(fileBuffer, file) {
     const bufferSrc = this.ctx.createBufferSource();
 
     const numFrames = fileBuffer.left.length;
@@ -35,7 +36,8 @@ class SoundPlayer {
     bufferSrc.onended = this._onEnd.bind(this);
     this.playStartTime = this.ctx.currentTime;
     this.bufferSrc = bufferSrc;
-    this.playingFile = fileBuffer;
+    this.playingFile = file;
+    this.playingFileBuffer = fileBuffer;
     bufferSrc.start();
     this.isPlaying = true;
   }
@@ -45,12 +47,14 @@ class SoundPlayer {
     this.playStartTime = null;
     this.bufferSrc = null;
     this.playingFile = null;
+    this.playingFileBuffer = null;
     if (this.onStop) {
       this.onStop();
     }
   }
 
   _onEnd() {
+    this.updatePlaybackPosition();
     this.isPlaying = false;
     if (this.onStop) {
       this.onStop();
@@ -59,12 +63,20 @@ class SoundPlayer {
 
   _updatePlaybackPosition() {
     if (this.isPlaying) {
-      if (this.onPlaybackPosition) {
-        const elapsed = this.ctx.currentTime - this.playStartTime;
-        this.onPlaybackPosition(elapsed, this.playingFile);
-      }
+      const totalLength = this.playingFileBuffer.left.length * 1.0 / this.playingFileBuffer.sampleRate;
+      const elapsed = Math.min(this.ctx.currentTime - this.playStartTime, totalLength);
+      const playingFile = this.playingFile;
+      this.playbackPositionListeners.forEach(listener => {listener(elapsed, playingFile)});
     }
     this.win.requestAnimationFrame(this.updatePlaybackPosition);
+  }
+
+  addPlaybackPositionListener(callback) {
+    this.playbackPositionListeners.push(callback);
+  }
+
+  removePlaybackPositionListener(callback) {
+    this.playbackPositionListeners = this.playbackPositionListeners.filter(listener => listener !== callback);
   }
 }
 

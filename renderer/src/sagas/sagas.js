@@ -85,7 +85,7 @@ function* togglePlay() {
     const file = yield select(selectedFileSelector);
     const buffer = yield call(getBufferData, file.path);
 
-    player.playFromBuffer(buffer);
+    player.playFromBuffer(buffer, file);
     yield put({type: PLAYBACK_SET_PLAYING});
   }
 }
