@@ -1,3 +1,4 @@
+
 import {delay} from 'redux-saga';
 import {
   all,
@@ -15,11 +16,13 @@ import {
   DB_LOAD_INITIAL_RESULTS_START,
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
   LIST_SELECT_FILE_ID,
+  PLAYBACK_TOGGLE_PLAY,
   SELECT_FILE
 } from '../actions/action-types';
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
+import {getPlayer} from '../sound-player-service/sound-player-service';
 
 function* selectFile(action) {
   const file = action.file;
@@ -62,9 +65,31 @@ function* watchDbLoadInitialResults() {
   yield takeLatest(DB_LOAD_INITIAL_RESULTS, dbLoadInitialResults);
 }
 
+function selectedFileSelector(state) {
+  const resultsList = state.resultsList;
+  if (resultsList.selectedId === null) {
+    return null;
+  }
+  return resultsList.files[resultsList.selectedId];
+}
+
+function* togglePlay() {
+  const player = getPlayer();
+  const file = yield select(selectedFileSelector);
+  const buffer = yield call(getBufferData, file.path);
+
+  // TODO: stop
+  player.playFromBuffer(buffer);
+}
+
+function* watchTogglePlay() {
+  yield takeLatest(PLAYBACK_TOGGLE_PLAY, togglePlay);
+}
+
 export default function* rootSaga() {
   yield all([
     watchDbLoadInitialResults(),
-    watchSelectFile()
+    watchSelectFile(),
+    watchTogglePlay()
   ]);
 }

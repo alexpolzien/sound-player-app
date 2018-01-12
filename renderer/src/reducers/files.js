@@ -7,7 +7,7 @@ import {
 const initialState = {
   loading: false,
   files: [],
-  selectedFile: null
+  selectedFile: null // TODO is this used?
 };
 
 export default function files(state = initialState, action) {

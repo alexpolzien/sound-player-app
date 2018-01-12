@@ -12,6 +12,7 @@ import {DB_LOAD_INITIAL_RESULTS} from './actions/action-types';
 import App from './components/App/App.jsx';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
+import {initPlayer} from './sound-player-service/sound-player-service';
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
@@ -52,6 +53,7 @@ function renderApp(RootComponent) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initPlayer(window);
   renderApp(App);
 });
 
