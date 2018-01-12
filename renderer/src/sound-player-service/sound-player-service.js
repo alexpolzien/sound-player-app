@@ -10,13 +10,10 @@ class SoundPlayer {
   }
 
   playFromBuffer(fileBuffer) {
-    console.log('playing', fileBuffer);
-
     const bufferSrc = this.ctx.createBufferSource();
 
-    // TODO: sampleRate
     const numFrames = fileBuffer.left.length;
-    const buffer = this.ctx.createBuffer(numChannels, numFrames, sr);
+    const buffer = this.ctx.createBuffer(numChannels, numFrames, fileBuffer.sampleRate);
 
     const leftChannel = buffer.getChannelData(0);
     const rightChannel = buffer.getChannelData(1);
@@ -27,6 +24,9 @@ class SoundPlayer {
 
     bufferSrc.buffer = buffer;
     bufferSrc.connect(this.ctx.destination);
+    bufferSrc.onended = (e) => {
+      console.log('end', e);
+    }
     bufferSrc.start();
   }
 }
