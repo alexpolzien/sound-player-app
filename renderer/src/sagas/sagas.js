@@ -16,6 +16,8 @@ import {
   DB_LOAD_INITIAL_RESULTS_START,
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
   LIST_SELECT_FILE_ID,
+  PLAYBACK_SET_PLAYING,
+  PLAYBACK_SET_STOPPED,
   PLAYBACK_TOGGLE_PLAY,
   SELECT_FILE
 } from '../actions/action-types';
@@ -75,11 +77,17 @@ function selectedFileSelector(state) {
 
 function* togglePlay() {
   const player = getPlayer();
-  const file = yield select(selectedFileSelector);
-  const buffer = yield call(getBufferData, file.path);
 
-  // TODO: stop
-  player.playFromBuffer(buffer);
+  if (player.isPlaying) {
+    player.stop();
+    yield put({type: PLAYBACK_SET_STOPPED});
+  } else {
+    const file = yield select(selectedFileSelector);
+    const buffer = yield call(getBufferData, file.path);
+
+    player.playFromBuffer(buffer);
+    yield put({type: PLAYBACK_SET_PLAYING});
+  }
 }
 
 function* watchTogglePlay() {

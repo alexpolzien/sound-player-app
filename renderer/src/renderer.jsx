@@ -12,6 +12,7 @@ import {DB_LOAD_INITIAL_RESULTS} from './actions/action-types';
 import App from './components/App/App.jsx';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
+import {initPlayerEvents} from './sound-player-service/sound-player-events';
 import {initPlayer} from './sound-player-service/sound-player-service';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -53,7 +54,8 @@ function renderApp(RootComponent) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initPlayer(window);
+  const playerEvents = initPlayerEvents(store);
+  initPlayer(window, playerEvents);
   renderApp(App);
 });
 

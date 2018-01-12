@@ -4,9 +4,11 @@ const numChannels = 2;
 const sr = 44100;
 
 class SoundPlayer {
-  constructor(ctx) {
+  constructor(ctx, eventCallbacks = {}) {
     this.ctx = ctx;
     this.isPlaying = false;
+    this.bufferSrc = null;
+    this.onStop = eventCallbacks.onStop;
   }
 
   playFromBuffer(fileBuffer) {
@@ -24,15 +26,23 @@ class SoundPlayer {
 
     bufferSrc.buffer = buffer;
     bufferSrc.connect(this.ctx.destination);
-    bufferSrc.onended = (e) => {
-      console.log('end', e);
-    }
+    bufferSrc.onended = this._onEnd.bind(this);
     bufferSrc.start();
+  }
+
+  stop() {
+    // TODO
+  }
+
+  _onEnd() {
+    if (this.onStop) {
+      this.onStop();
+    }
   }
 }
 
-export function initPlayer(win) {
-  player = new SoundPlayer(new win.AudioContext());
+export function initPlayer(win, callbacks) {
+  player = new SoundPlayer(new win.AudioContext(), callbacks);
 }
 
 export function getPlayer() {
