@@ -1,0 +1,13 @@
+.container {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  bottom: 8px;
+  color: #fcfcfc;
+  font-family: monospace;
+  font-size: 13px;
+  letter-spacing: -1px;
+  padding: 4px;
+  position: absolute;
+  right: 8px;
+  white-space: nowrap;
+}

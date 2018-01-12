@@ -10,3 +10,9 @@
   right: 16px;
   top: 16px;
 }
+
+.time {
+  position: absolute;
+  right: 16px;
+  bottom: 0px;
+}
