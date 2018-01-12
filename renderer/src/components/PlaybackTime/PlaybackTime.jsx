@@ -29,7 +29,7 @@ function zeroPad(ms) {
   return str;
 }
 
-class TimeCounter extends React.Component {
+class TimeCounter extends React.PureComponent {
   render() {
     const {secs} = this.props;
     const time = calcTime(secs);
