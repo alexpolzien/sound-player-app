@@ -1,8 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
 
 import styles from './PlaybackTime.css';
-import {getPlayer} from '../../sound-player-service/sound-player-service';
+import withPlaybackTime from '../enhancers/with-playback-time.jsx';
 
 function mapState(state) {
   return {
@@ -37,49 +36,15 @@ class TimeCounter extends React.PureComponent {
   }
 }
 
-// TODO: this needs to be optimized
 class PlaybackTimeMain extends React.Component {
-  constructor() {
-    super(...arguments);
-    this.onPlaybackPositionChanged = this._onPlaybackPositionChanged.bind(this);
-    this.state = {
-      playbackTime: 0
-    };
-  }
-
-  componentDidMount() {
-    const player = getPlayer(); // TODO: pass via context or something else?
-    player.addPlaybackPositionListener(this.onPlaybackPositionChanged);
-  }
-
-  componentWillUnmount() {
-    const player = getPlayer();
-    player.removePlaybackPositionListener(this.onPlaybackPositionChanged);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.file !== this.props.file) {
-      this.setState({playbackTime: 0});
-    }
-  }
-
-  _onPlaybackPositionChanged(timeElapsed, file) {
-    if (this.props.file && file.id === this.props.file.id) {
-      this.setState({playbackTime: timeElapsed});
-    }
-  }
-
   render() {
-    const {file, buffer} = this.props;
-    const {playbackTime} = this.state;
-    if (file === null || buffer === null) {
+    const {currentTime, totalTime} = this.props;
+    if (currentTime === null || totalTime === null) {
       return null;
     }
 
-    const totalTimeSecs = buffer.left.length * 1.0 / buffer.sampleRate;
-
-    return <div className={styles.container}><TimeCounter secs={playbackTime} /> / <TimeCounter secs={totalTimeSecs} /></div>;
+    return <div className={styles.container}><TimeCounter secs={currentTime} /> / <TimeCounter secs={totalTime} /></div>;
   }
 }
 
-export default connect(mapState, null)(PlaybackTimeMain);
+export default withPlaybackTime(PlaybackTimeMain);
