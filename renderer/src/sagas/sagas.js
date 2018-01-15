@@ -34,6 +34,12 @@ function* selectFile(action) {
     id: file.id
   });
 
+  // stop playback
+  const player = getPlayer();
+  if (player.isPlaying) {
+    player.stop();
+  }
+
   // TODO: clear the old buffer?
 
   // get the file buffer
