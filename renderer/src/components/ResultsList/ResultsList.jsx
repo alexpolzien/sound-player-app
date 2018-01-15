@@ -66,7 +66,7 @@ class ResultsListItem extends React.PureComponent {
   }
 }
 
-class Header extends React.Component {
+class Header extends React.PureComponent {
   render() {
     return (
       <div className={styles.header}>
@@ -82,7 +82,6 @@ class Header extends React.Component {
 class ScrollList extends React.PureComponent {
   static paddingPages = 2;
   static rowHeight = 20;
-  static throttleTime = 100;
 
   constructor() {
     super(...arguments);
@@ -220,7 +219,7 @@ class ScrollList extends React.PureComponent {
       }
 
       if (newScrollTop) {
-        this.container.scrollTop = newScrollTop; // TODO: trigger onScroll?
+        this.container.scrollTop = newScrollTop;
       }
     }
   }
