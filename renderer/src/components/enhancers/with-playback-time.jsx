@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {getPlayer} from '../../sound-player-service/sound-player-service';
+import {throttleAnimationFrame} from '../../utils/event-processing';
 
 function mapState(state) {
   return {
@@ -14,7 +15,7 @@ function withPlaybackTimeEnhancer(Wrapped) {
   return class extends React.Component {
     constructor() {
       super(...arguments);
-      this.onPlaybackPositionChanged = this._onPlaybackPositionChanged.bind(this);
+      this.onPlaybackPositionChanged = throttleAnimationFrame(this._onPlaybackPositionChanged.bind(this));
       this.state = {
         playbackTime: 0
       };
