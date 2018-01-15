@@ -43,14 +43,12 @@ class SoundPlayer {
   }
 
   stop() {
+    this.bufferSrc.stop();
     this.isPlaying = false;
     this.playStartTime = null;
     this.bufferSrc = null;
     this.playingFile = null;
     this.playingFileBuffer = null;
-    if (this.onStop) {
-      this.onStop();
-    }
   }
 
   _onEnd() {
