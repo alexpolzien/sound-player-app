@@ -4,7 +4,7 @@ class SoundPlayer {
   static defaultGain = 0.8;
   static numChannels = 2;
 
-  constructor(win, ctx, eventCallbacks = {}) {
+  constructor(win, ctx) {
     this.win = win;
     this.ctx = ctx;
     this.isPlaying = false;
@@ -12,12 +12,12 @@ class SoundPlayer {
     this.bufferSrc = null;
     this.playingFile = null;
     this.playingFileBuffer = null;
-    this.onStop = eventCallbacks.onStop;
     this.updatePlaybackPosition = this._updatePlaybackPosition.bind(this);
     this.onEnd = this._onEnd.bind(this);
     this.updatePlaybackPosition();
     this.playbackPositionListeners = [];
     this.gainLevelListeners = [];
+    this.stopListeners = [];
 
     // connect the gain node
     this.gainNode = this.ctx.createGain();
@@ -63,9 +63,7 @@ class SoundPlayer {
     this.playingFile = null;
     this.playingFileBuffer = null;
 
-    if (this.onStop) {
-      this.onStop();
-    }
+    this.stopListeners.forEach(listener => {listener()});
   }
 
   _updatePlaybackPosition() {
@@ -102,12 +100,38 @@ class SoundPlayer {
   removeGainLevelListener(callback) {
     this.gainLevelListeners = this.gainLevelListeners.filter(listener => listener !== callback);
   }
+
+  addStopListener(callback) {
+    this.stopListeners.push(callback);
+  }
+
+  removeStopListener(callback) {
+    this.stopListeners = this.stopListeners.filter(listener => listener !== callback);
+  }
 }
 
-export function initPlayer(win, callbacks) {
-  player = new SoundPlayer(win, new win.AudioContext(), callbacks);
+export function initPlayer(win) {
+  player = new SoundPlayer(win, new win.AudioContext());
 }
 
 export function getPlayer() {
   return player;
+}
+
+export function waitForStop() {
+  // returns a promise that resolves the next time the player stops
+
+  function promiseFunc(resolve, reject) {
+    function listener() {
+      player.removeStopListener(listener);
+      resolve();
+    }
+    player.addStopListener(listener);
+  }
+
+  if (!player.isPlaying) {
+    return Promise.resolve();
+  }
+
+  return new Promise(promiseFunc);
 }

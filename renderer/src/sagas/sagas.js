@@ -24,7 +24,7 @@ import {
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
-import {getPlayer} from '../sound-player-service/sound-player-service';
+import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 
 function* selectFile(action) {
   const file = action.file;
@@ -50,6 +50,16 @@ function* selectFile(action) {
     file,
     buffer
   });
+
+  const autoPlayOn = yield select(state => state.playback.autoPlay);
+  if (autoPlayOn) {
+    if (player.isPlaying) {
+      yield call(waitForStop);
+    }
+
+    player.playFromBuffer(buffer, file);
+    yield put({type: PLAYBACK_SET_PLAYING});
+  }
 }
 
 function* watchSelectFile() {
@@ -86,7 +96,6 @@ function* togglePlay() {
 
   if (player.isPlaying) {
     player.stop();
-    yield put({type: PLAYBACK_SET_STOPPED});
   } else {
     const file = yield select(selectedFileSelector);
     const buffer = yield call(getBufferData, file.path);

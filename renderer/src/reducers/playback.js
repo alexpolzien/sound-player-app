@@ -10,23 +10,6 @@ const initialState = {
 };
 
 export default function playback(state = initialState, action) {
-  /*switch (action.type) {
-    case PLAYBACK_TOGGLE_AUTO_PLAY:
-      // if autoplay is turned on, turn on playback too
-      return {
-        ...state,
-        autoPlay: !state.autoPlay,
-        isPlaying: !state.autoPlay || state.isPlaying
-      };
-    case PLAYBACK_TOGGLE_PLAY:
-      return {
-        ...state,
-        isPlaying: !state.isPlaying
-      };
-    default:
-      return state;
-  }*/
-
   switch (action.type) {
     case PLAYBACK_SET_PLAYING:
       return {
@@ -37,6 +20,11 @@ export default function playback(state = initialState, action) {
       return {
         ...state,
         isPlaying: false
+      };
+    case PLAYBACK_TOGGLE_AUTO_PLAY:
+      return {
+        ...state,
+        autoPlay: !state.autoPlay
       };
     default:
       return state;
