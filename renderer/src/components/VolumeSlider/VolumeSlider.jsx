@@ -1,23 +1,11 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 
-import {setVolume} from '../../actions/actions';
 import {throttle} from '../../utils/event-processing';
+import {getPlayer} from '../../sound-player-service/sound-player-service';
 import styles from './VolumeSlider.css';
 
-function mapState(state) {
-  return {
-    level: state.playback.volume
-  };
-}
-
-function mapDispatch(dispatch) {
-  return bindActionCreators({setVolume}, dispatch);
-}
-
 // TODO: make right side darker
-class VolumeSliderMain extends React.Component {
+export default class VolumeSlider extends React.Component {
   static trackLength = 100;
   static knobSize = 15;
 
@@ -29,6 +17,7 @@ class VolumeSliderMain extends React.Component {
     this.onMouseDown = this._onMouseDown.bind(this);
     this.onMouseMove = this._onMouseMove.bind(this);
     this.onMouseUp = this._onMouseUp.bind(this);
+    this.onGainChanged = this._onGainChanged.bind(this);
   }
 
   _onMouseDown(e) {
@@ -54,22 +43,21 @@ class VolumeSliderMain extends React.Component {
   componentDidMount() {
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('mouseup', this.onMouseUp);
-    this.updatePositionFromPropsChange(this.props.level);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.level !== this.props.level && !this.dragging) {
-      this.updatePositionFromPropsChange(nextProps.level);
-    }
+    const player = getPlayer();
+    this.updatePositionFromGain(player.getGainLevel());
+    player.addGainLevelListener(this.onGainChanged);
   }
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('mouseup', this.onMouseUp);
+    const player = getPlayer();
+    player.removeGainLevelListener(this.onGainChanged);
   }
 
   _setVolume(level) {
-    this.props.setVolume(level);
+    const player = getPlayer();
+    player.setGainLevel(level);
   }
 
   updatePositionFromMouse(mouseX) {
@@ -81,8 +69,14 @@ class VolumeSliderMain extends React.Component {
     this.setVolume(offset / this.constructor.trackLength);
   }
 
-  updatePositionFromPropsChange(value) {
-    this.knob.style.left = (this.props.level * this.constructor.trackLength) + 'px';
+  updatePositionFromGain(value) {
+    this.knob.style.left = (value * this.constructor.trackLength) + 'px';
+  }
+
+  _onGainChanged(value) {
+    if (!this.dragging) {
+      this.updatePositionFromGain(value);
+    }
   }
 
   render() {
@@ -97,5 +91,3 @@ class VolumeSliderMain extends React.Component {
     );
   }
 }
-
-export default connect(mapState, mapDispatch)(VolumeSliderMain);

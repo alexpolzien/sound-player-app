@@ -12,13 +12,6 @@ export function selectFile(file) {
   };
 }
 
-export function setVolume(level) {
-  return {
-    type: PLAYBACK_SET_VOLUME,
-    level: level
-  };
-}
-
 export function toggleAutoPlay() {
   return {type: PLAYBACK_TOGGLE_AUTO_PLAY};
 }
