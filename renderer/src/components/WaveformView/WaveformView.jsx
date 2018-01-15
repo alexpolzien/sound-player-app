@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import styles from './WaveformView.css';
+import withPlaybackTime from '../enhancers/with-playback-time.jsx';
 
 function mapState(state) {
   return {
@@ -102,6 +103,21 @@ class WaveformChannel extends React.Component {
   }
 }
 
+class PlayheadMain extends React.Component {
+  render() {
+    const {currentTime, totalTime} = this.props;
+    if (currentTime === null || totalTime === null) {
+      return null;
+    }
+    const percent = currentTime / totalTime * 100;
+    const divStyle = {left: percent + '%'};
+
+    return <div className={styles.playhead} style={divStyle}></div>
+  }
+}
+
+const Playhead = withPlaybackTime(PlayheadMain);
+
 class WaveformViewMain extends React.Component {
   render() {
     const {buffer, file} = this.props;
@@ -116,8 +132,11 @@ class WaveformViewMain extends React.Component {
 
     return (
       <div className={styles.container}>
-        <WaveformChannel channel="left" wave={leftWave} />
-        <WaveformChannel channel="right" wave={rightWave} />
+        <div className={styles.waveContainer}>
+          <WaveformChannel channel="left" wave={leftWave} />
+          <WaveformChannel channel="right" wave={rightWave} />
+          <Playhead />
+        </div>
       </div>
     );
   }
