@@ -3,10 +3,25 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {createSelector} from 'reselect';
 
-import {selectFile} from '../../actions/actions';
+import {
+  selectFile,
+  setResultsSortDirection,
+  setResulstSortType
+} from '../../actions/actions';
 import {UP_ARROW_KEY, DOWN_ARROW_KEY} from '../../constants';
-import styles from './ResultsList.css';
 import {throttleAnimationFrame} from '../../utils/event-processing';
+import {
+  SORT_FILE_NAME,
+  SORT_SAMPLE_RATE,
+  SORT_BITS,
+  SORT_CHANNELS,
+  SORT_FORMAT,
+  SORT_DURATION,
+  SORT_PLAYS,
+  SORT_ASC,
+  SORT_DESC
+} from '../../utils/file-sort-utils';
+import styles from './ResultsList.css';
 
 const filesSelector = state => state.resultsList.files;
 const sortedResultsSelector = createSelector(
@@ -35,12 +50,20 @@ const sortedResultsSelector = createSelector(
 function mapState(state) {
   return {
     files: sortedResultsSelector(state),
-    selectedFileId: state.resultsList.selectedId
+    selectedFileId: state.resultsList.selectedId,
+    sortType: state.resultsList.sort.type,
+    sortDirection: state.resultsList.sort.direction
   };
 }
 
 function mapDispatch(dispatch) {
-  return bindActionCreators({selectFile}, dispatch);
+  return bindActionCreators(
+    {
+      selectFile,
+      setResulstSortType,
+      setResultsSortDirection
+    },
+    dispatch);
 }
 
 class ResultsListItem extends React.PureComponent {
@@ -72,7 +95,81 @@ class ResultsListItem extends React.PureComponent {
         <div className={styles.otherCell}>{file.channels}</div>
         <div className={styles.otherCell}>{file.format}</div>
         <div className={styles.otherCell}>{this.constructor.formatTime(file.durationMs)}</div>
+        <div className={styles.otherCell}>TODO</div>
       </li>
+    );
+  }
+}
+
+class SortArrow extends React.PureComponent {
+  constructor() {
+    super(...arguments);
+    this.onClick = this._onClick.bind(this);
+  }
+
+  _onClick() {
+    const newDirection = this.props.sortDirection === SORT_ASC ? SORT_DESC : SORT_ASC;
+    this.props.setDirection(newDirection);
+  }
+
+  render() {
+    const {sortDirection} = this.props;
+    const label = sortDirection === SORT_ASC ? '▲' : '▼';
+
+    return <div className={styles.sortArrow} onClick={this.onClick}>{label}</div>;
+  }
+}
+
+class SortMenu extends React.PureComponent {
+  static sortOptions = [
+    ['File Name', SORT_FILE_NAME],
+    ['Sample Rate', SORT_SAMPLE_RATE],
+    ['Bits', SORT_BITS],
+    ['Channels', SORT_CHANNELS],
+    ['Format', SORT_FORMAT],
+    ['Duration', SORT_DURATION],
+    ['Plays', SORT_PLAYS]
+  ];
+
+  constructor() {
+    super(...arguments);
+    this.onChange = this._onChange.bind(this);
+  }
+
+  _onChange(e) {
+    this.props.setType(e.target.value);
+  }
+
+  render() {
+    const {sortType} = this.props;
+    return (
+      <select className={styles.sortMenu} onChange={this.onChange}>
+        {this.constructor.sortOptions.map(option => {
+          const [label, value] = option;
+          const optionProps = {value};
+          if (value === sortType) {
+            optionProps.selected = 'selected';
+          }
+          return <option {...optionProps} key={value}>{label}</option>;
+        })}
+      </select>
+    );
+  }
+}
+
+class SortHeader extends React.Component {
+  render() {
+    const {setDirection, sortDirection, setType, sortType} = this.props;
+
+    return (
+      <div className={styles.sortHeader}>
+        <div className={styles.sortControls}>
+          <div>
+            <SortMenu sortType={sortType} setType={setType} />
+          </div>
+          <SortArrow setDirection={setDirection} sortDirection={sortDirection} />
+        </div>
+      </div>
     );
   }
 }
@@ -80,13 +177,14 @@ class ResultsListItem extends React.PureComponent {
 class Header extends React.PureComponent {
   render() {
     return (
-      <div className={styles.header}>
+      <div className={styles.listHeader}>
         <div className={styles.fileNameCell}>File Name</div>
         <div className={styles.otherCell}>Sample Rate</div>
         <div className={styles.otherCell}>Bits</div>
         <div className={styles.otherCell}>Channels</div>
         <div className={styles.otherCell}>Format</div>
         <div className={styles.otherCell}>Duration</div>
+        <div className={styles.otherCell}>Plays</div>
       </div>
     );
   }
@@ -240,10 +338,15 @@ class ScrollList extends React.PureComponent {
 
 class ResultsListMain extends React.Component {
   render() {
-    const {files, selectFile, selectedFileId} = this.props;
+    const {
+      files, selectFile, selectedFileId,
+      sortType, sortDirection, setResultsSortType,
+      setResultsSortDirection} = this.props;
 
     return (
       <div className={styles.list}>
+        <SortHeader sortType={sortType} sortDirection={sortDirection}
+          setType={setResulstSortType} setDirection={setResultsSortDirection} />
         <Header />
         <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId} />
       </div>

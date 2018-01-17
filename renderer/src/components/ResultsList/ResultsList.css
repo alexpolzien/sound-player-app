@@ -16,7 +16,11 @@
   height: 24px;
   padding-right: 15px;
 }
-.header > div {
+
+.listHeader {
+  composes: header;
+}
+.listHeader > div {
   box-sizing: border-box;
   float: left;
   height: 24px;
@@ -24,12 +28,42 @@
   padding: 0 8px;
 }
 
+.sortHeader {
+  composes: header;
+  position: relative;
+}
+.sortControls {
+  bottom: 0;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+.sortControls > div {
+  float: right;
+}
+.sortMenu {
+  font-size: 13px;
+  margin-top: 2px;
+}
+.sortArrow {
+  height: 24px;
+  font-size: 17px;
+  line-height: 24px;
+  padding: 0 6px;
+}
+
+.listCell {
+  overflow: hidden;
+  white-space: nowrap;
+}
 .fileNameCell {
+  composes: listCell;
   width: 35%;
 }
 .otherCell {
+  composes: listCell;
   text-align: right;
-  width: 13%;
+  width: calc(65% / 6);
 }
 
 .scrollList {
@@ -38,7 +72,7 @@
   overflow-y: scroll;
   position: absolute;
   right: 0;
-  top: 24px;
+  top: 48px;
 }
 
 .scrollList ul {
