@@ -24,6 +24,7 @@ import {
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
+import {nextFileSelector} from '../shared-selectors/file-selectors';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 
 function* selectFile(action) {
@@ -109,10 +110,28 @@ function* watchTogglePlay() {
   yield takeLatest(PLAYBACK_TOGGLE_PLAY, togglePlay);
 }
 
+function cyclePlaySelector(state) {
+  return state.playback.cyclePlay;
+}
+
+function* onStopped() {
+  const cyclePlay = yield select(cyclePlaySelector);
+  if (cyclePlay) {
+    yield waitForStop();
+    const nextFile = yield select(nextFileSelector);
+    yield put({type: SELECT_FILE, file: nextFile});
+  }
+}
+
+function* watchStopped() {
+  yield takeLatest(PLAYBACK_SET_STOPPED, onStopped);
+}
+
 export default function* rootSaga() {
   yield all([
     watchDbLoadInitialResults(),
     watchSelectFile(),
+    watchStopped(),
     watchTogglePlay()
   ]);
 }

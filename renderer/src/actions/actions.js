@@ -1,6 +1,7 @@
 import {
   PLAYBACK_SET_VOLUME,
   PLAYBACK_TOGGLE_AUTO_PLAY,
+  PLAYBACK_TOGGLE_CYCLE_PLAY,
   PLAYBACK_TOGGLE_PLAY,
   RESULTS_SET_SORT_DIRECTION,
   RESULTS_SET_SORT_TYPE,
@@ -16,6 +17,10 @@ export function selectFile(file) {
 
 export function toggleAutoPlay() {
   return {type: PLAYBACK_TOGGLE_AUTO_PLAY};
+}
+
+export function toggleCyclePlay() {
+  return {type: PLAYBACK_TOGGLE_CYCLE_PLAY};
 }
 
 export function togglePlayback() {

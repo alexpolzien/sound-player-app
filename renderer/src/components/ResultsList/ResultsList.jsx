@@ -11,7 +11,6 @@ import {
 import {UP_ARROW_KEY, DOWN_ARROW_KEY} from '../../constants';
 import {throttleAnimationFrame} from '../../utils/event-processing';
 import {
-  getSortedFilesArray,
   SORT_FILE_NAME,
   SORT_SAMPLE_RATE,
   SORT_BITS,
@@ -23,16 +22,7 @@ import {
   SORT_DESC
 } from '../../utils/file-sort-utils';
 import styles from './ResultsList.css';
-
-const filesSelector = state => state.resultsList.files;
-const sortTypeSelector = state => state.resultsList.sort.type;
-const sortDirectionSelector = state => state.resultsList.sort.direction;
-const sortedResultsSelector = createSelector(
-  filesSelector,
-  sortTypeSelector,
-  sortDirectionSelector,
-  (files, sortType, sortDirection) => getSortedFilesArray(files, sortType, sortDirection)
-);
+import {sortedResultsSelector} from '../../shared-selectors/file-selectors';
 
 function mapState(state) {
   return {
