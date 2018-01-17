@@ -24,7 +24,6 @@ class LeftSidePlaybackControlsMain extends React.Component {
     return (
       <div className={styles.container}>
         <PlaybackControlsToggleButton isActive={autoPlay} toggleAction={toggleAutoPlay} label="AUTO" />
-        <PlaybackControlsToggleButton isActive={cyclePlay} toggleAction={toggleCyclePlay} label="CYCLE" />
       </div>
     );
   }
