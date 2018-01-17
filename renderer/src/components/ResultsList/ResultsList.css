@@ -25,10 +25,11 @@
 }
 
 .fileNameCell {
-  width: 40%;
+  width: 35%;
 }
 .otherCell {
-  width: 20%;
+  text-align: right;
+  width: 13%;
 }
 
 .scrollList {

@@ -24,6 +24,10 @@ const promises = fileNames.filter(isWav).map(fileName =>
               id: v4(),
               fileName,
               sampleRate: asset.format.sampleRate,
+              format: 'WAV',
+              channels: asset.format.channelsPerFrame,
+              bitDepth: asset.format.bitsPerChannel,
+              durationMs: asset.duration,
               path: absPath
             });
           });

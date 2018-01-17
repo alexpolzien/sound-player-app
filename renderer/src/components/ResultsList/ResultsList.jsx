@@ -44,6 +44,15 @@ function mapDispatch(dispatch) {
 }
 
 class ResultsListItem extends React.PureComponent {
+  static formatTime(duration) {
+    const secs = Math.floor(duration / 1000);
+    let ms = (duration % 1000).toString();
+    while (ms.length < 3) {
+      ms = '0' + ms;
+    }
+    return `${secs}.${ms}`;
+  }
+
   constructor() {
     super(...arguments);
     this.onClick = this._onClick.bind(this);
@@ -59,8 +68,10 @@ class ResultsListItem extends React.PureComponent {
       <li className={isSelected ? styles.selectedItem : ''} style={{top: top}} onClick={this.onClick}>
         <div className={styles.fileNameCell}>{file.fileName}</div>
         <div className={styles.otherCell}>{file.sampleRate}</div>
-        <div className={styles.otherCell}>TODO: num channels</div>
-        <div className={styles.otherCell}>TODO: format</div>
+        <div className={styles.otherCell}>{file.bitDepth}</div>
+        <div className={styles.otherCell}>{file.channels}</div>
+        <div className={styles.otherCell}>{file.format}</div>
+        <div className={styles.otherCell}>{this.constructor.formatTime(file.durationMs)}</div>
       </li>
     );
   }
@@ -72,8 +83,10 @@ class Header extends React.PureComponent {
       <div className={styles.header}>
         <div className={styles.fileNameCell}>File Name</div>
         <div className={styles.otherCell}>Sample Rate</div>
+        <div className={styles.otherCell}>Bits</div>
         <div className={styles.otherCell}>Channels</div>
         <div className={styles.otherCell}>Format</div>
+        <div className={styles.otherCell}>Duration</div>
       </div>
     );
   }
