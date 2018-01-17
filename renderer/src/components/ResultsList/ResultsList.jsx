@@ -6,11 +6,12 @@ import {createSelector} from 'reselect';
 import {
   selectFile,
   setResultsSortDirection,
-  setResulstSortType
+  setResultsSortType
 } from '../../actions/actions';
 import {UP_ARROW_KEY, DOWN_ARROW_KEY} from '../../constants';
 import {throttleAnimationFrame} from '../../utils/event-processing';
 import {
+  getSortedFilesArray,
   SORT_FILE_NAME,
   SORT_SAMPLE_RATE,
   SORT_BITS,
@@ -24,27 +25,13 @@ import {
 import styles from './ResultsList.css';
 
 const filesSelector = state => state.resultsList.files;
+const sortTypeSelector = state => state.resultsList.sort.type;
+const sortDirectionSelector = state => state.resultsList.sort.direction;
 const sortedResultsSelector = createSelector(
   filesSelector,
-  files => {
-    const filesArray = [];
-    for (const fileId in files) {
-      filesArray.push(files[fileId]);
-    }
-
-    filesArray.sort(
-      (file1, file2) => {
-        if (file1.fileName < file2.fileName) {
-          return -1;
-        } else if (file1.fileName > file2.fileName) {
-          return 1;
-        }
-        return 0;
-      }
-    );
-
-    return filesArray;
-  }
+  sortTypeSelector,
+  sortDirectionSelector,
+  (files, sortType, sortDirection) => getSortedFilesArray(files, sortType, sortDirection)
 );
 
 function mapState(state) {
@@ -60,7 +47,7 @@ function mapDispatch(dispatch) {
   return bindActionCreators(
     {
       selectFile,
-      setResulstSortType,
+      setResultsSortType,
       setResultsSortDirection
     },
     dispatch);
@@ -143,14 +130,10 @@ class SortMenu extends React.PureComponent {
   render() {
     const {sortType} = this.props;
     return (
-      <select className={styles.sortMenu} onChange={this.onChange}>
+      <select className={styles.sortMenu} onChange={this.onChange} value={sortType}>
         {this.constructor.sortOptions.map(option => {
           const [label, value] = option;
-          const optionProps = {value};
-          if (value === sortType) {
-            optionProps.selected = 'selected';
-          }
-          return <option {...optionProps} key={value}>{label}</option>;
+          return <option value={value} key={value}>{label}</option>;
         })}
       </select>
     );
@@ -346,7 +329,7 @@ class ResultsListMain extends React.Component {
     return (
       <div className={styles.list}>
         <SortHeader sortType={sortType} sortDirection={sortDirection}
-          setType={setResulstSortType} setDirection={setResultsSortDirection} />
+          setType={setResultsSortType} setDirection={setResultsSortDirection} />
         <Header />
         <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId} />
       </div>
