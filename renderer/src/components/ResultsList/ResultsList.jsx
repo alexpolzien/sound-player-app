@@ -292,8 +292,14 @@ class ScrollList extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const {files, selectedFileId} = this.props;
-    if (this.container && selectedFileId && selectedFileId !== prevProps.selectedFileId) {
+    const {files, selectedFileId, sortType, sortDirection} = this.props;
+    if (this.container &&
+      (
+        selectedFileId && selectedFileId !== prevProps.selectedFileId
+        || sortType !== prevProps.sortType
+        || sortDirection !== prevProps.sortDirection
+      )
+    ) {
       // if the selected file changed, and it is not in the viewport, scroll to it
       const top = this.container.scrollTop;
       const viewportHeight = this.container.offsetHeight;
@@ -331,7 +337,8 @@ class ResultsListMain extends React.Component {
         <SortHeader sortType={sortType} sortDirection={sortDirection}
           setType={setResultsSortType} setDirection={setResultsSortDirection} />
         <Header />
-        <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId} />
+        <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId}
+          sortType={sortType} sortDirection={sortDirection} />
       </div>
     );
   }
