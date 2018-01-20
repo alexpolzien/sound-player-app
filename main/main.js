@@ -39,7 +39,7 @@ function createWindow() {
   ipcMain.on('ondragstart', (event, filePath) => {
     event.sender.startDrag({
       file: filePath,
-      icon: path.join(__dirname, 'test-icon.png')
+      icon: path.join(__dirname, 'drop-icon.png')
     });
   });
 }
