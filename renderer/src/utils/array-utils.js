@@ -13,3 +13,12 @@ export function arraysAreSame(arr1, arr2) {
 
   return true;
 }
+
+export function splitAtTail(arr) {
+  if (arr.length === 0) {
+    return [[], null];
+  }
+  const head = arr.slice(0, arr.length - 1);
+  const tail = arr[arr.length - 1];
+  return [head, tail];
+}

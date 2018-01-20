@@ -85,6 +85,7 @@
   left: 0;
   position: absolute;
   right: 0;
+  -webkit-user-select: none;
 }
 .scrollList li > div {
   box-sizing: border-box;

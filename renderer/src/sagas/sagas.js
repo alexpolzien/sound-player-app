@@ -33,8 +33,8 @@ function* selectFile(action) {
   yield put({
     type: LIST_SELECT_FILE_ID,
     id: action.file.id,
-    isMultiSelect: action.isMultiSelect,
-    isRangeSelect: action.isRangeSelect
+    newRange: action.newRange,
+    addToRange: action.addToRange
   });
 
   // stop playback

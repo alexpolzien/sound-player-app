@@ -4,12 +4,13 @@ import {
   RESULTS_SET_SORT_DIRECTION,
   RESULTS_SET_SORT_TYPE
 } from '../actions/action-types';
-import {SORT_ASC, SORT_FILE_NAME} from '../utils/file-sort-utils';
+import {splitAtTail} from '../utils/array-utils';
+import {getSortedFilesArray, SORT_ASC, SORT_FILE_NAME} from '../utils/file-sort-utils';
 
 const initialState = {
   files: {},
   selectedId: null,
-  multiIds: {},
+  selectRanges: [],
   sort: {
     type: SORT_FILE_NAME,
     direction: SORT_ASC
@@ -28,23 +29,31 @@ export default function resultsList(state = initialState, action) {
         files
       };
     case LIST_SELECT_FILE_ID:
-      let multiIds;
-      console.log(action);
-      if (action.isMultiSelect) {
-        multiIds = {...state.multiIds, [action.id]: true};
-        if (state.selectedId) {
-          multiIds[state.selectedId] = true;
+      let selectRanges;
+      if (action.newRange) {
+        selectRanges = [
+          ...state.selectRanges,
+          {startId: action.id, endId: action.id}
+        ];
+      } else if (action.addToRange) {
+        let [head, tail] = splitAtTail(state.selectRanges);
+        if (tail === null) {
+          tail = {startId: action.id, endId: action.id};
+        } else {
+          tail = {...tail, endId: action.id};
         }
+        selectRanges = head.concat(tail);
       } else {
-        multiIds = {};
+        selectRanges = [{startId: action.id, endId: action.id}];
       }
 
       return {
         ...state,
         selectedId: action.id,
-        multiIds
+        selectRanges
       };
     case RESULTS_SET_SORT_DIRECTION:
+      // TODO: reset ranges
       return {
         ...state,
         sort: {
@@ -53,6 +62,7 @@ export default function resultsList(state = initialState, action) {
         }
       };
     case RESULTS_SET_SORT_TYPE:
+      // TODO: reset ranges
       return {
         ...state,
         sort: {

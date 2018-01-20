@@ -23,13 +23,16 @@ import {
   SORT_DESC
 } from '../../utils/file-sort-utils';
 import styles from './ResultsList.css';
-import {sortedResultsSelector} from '../../shared-selectors/file-selectors';
+import {
+  multiSelectedIdsSelector,
+  sortedResultsSelector
+} from '../../shared-selectors/file-selectors';
 
 function mapState(state) {
   return {
     files: sortedResultsSelector(state),
     selectedFileId: state.resultsList.selectedId,
-    multiIds: state.resultsList.multiIds,
+    multiIds: multiSelectedIdsSelector(state),
     sortType: state.resultsList.sort.type,
     sortDirection: state.resultsList.sort.direction
   };
@@ -62,7 +65,7 @@ class ResultsListItem extends React.PureComponent {
   }
 
   _onClick(e) {
-    this.props.selectFile(this.props.file, e.nativeEvent.ctrlKey || e.nativeEvent.metaKey, e.nativeEvent.ctrlKey);
+    this.props.selectFile(this.props.file, e.nativeEvent.ctrlKey || e.nativeEvent.metaKey, e.nativeEvent.shiftKey);
   }
 
   _onDragStart(e) {
@@ -247,7 +250,7 @@ class ScrollList extends React.PureComponent {
       fileToSelect = files[selectedIndex];
     }
 
-    selectFile(fileToSelect);
+    selectFile(fileToSelect, e.nativeEvent.ctrlKey || e.nativeEvent.metaKey, e.nativeEvent.shiftKey);
   }
 
   componentDidMount() {
