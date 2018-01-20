@@ -2,6 +2,8 @@ require('./main.css');
 
 require('react-hot-loader/patch');
 
+import {remote} from 'electron';
+const os = remote.require('os');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
@@ -13,6 +15,26 @@ import App from './components/App/App.jsx';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
+
+// worker test stuff
+import TestWorker from './workers/test-worker.worker';
+import WorkerPool from './worker-pool/WorkerPool';
+
+const pool = new WorkerPool(
+  () => new TestWorker(),
+  (e) => {
+    console.log('got message from worker', e.data.num);
+  },
+  os.cpus().length,
+  (e) => e.data.num === 100,
+  1000
+);
+
+for (let i = 0; i < 100; i++) {
+  pool.requestJob({});
+}
+
+// end worker test stuff
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?

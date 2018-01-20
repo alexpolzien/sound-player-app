@@ -21,6 +21,7 @@ function getFileBuffer(filePath) {
 function decodeFileBuffer(buffer) {
   return new Promise(
     (resolve, reject) => {
+      console.log('buffer', buffer.buffer);
       const asset = AV.Asset.fromBuffer(buffer);
       asset.decodeToBuffer(data => {
         const numChannels = 2; // hard-coded to stereo for now

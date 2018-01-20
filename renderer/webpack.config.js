@@ -50,6 +50,10 @@ module.exports = {
       {
         test: /\.coffee$/,
         use: ['coffee-loader']
+      },
+      {
+        test: /\.worker\.js$/,
+        use: {loader: 'worker-loader'}
       }
     ]
   },
