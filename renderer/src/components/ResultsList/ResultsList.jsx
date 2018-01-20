@@ -24,17 +24,20 @@ import {
 } from '../../utils/file-sort-utils';
 import styles from './ResultsList.css';
 import {
-  multiSelectedIdsSelector,
+  multiSelectedSelector,
   sortedResultsSelector
 } from '../../shared-selectors/file-selectors';
 
 function mapState(state) {
+  const {selectedIds, sortedSelectedFiles} = multiSelectedSelector(state);
+
   return {
     files: sortedResultsSelector(state),
+    multiIds: selectedIds,
     selectedFileId: state.resultsList.selectedId,
-    multiIds: multiSelectedIdsSelector(state),
     sortType: state.resultsList.sort.type,
-    sortDirection: state.resultsList.sort.direction
+    sortDirection: state.resultsList.sort.direction,
+    sortedSelectedFiles
   };
 }
 
@@ -48,7 +51,7 @@ function mapDispatch(dispatch) {
     dispatch);
 }
 
-class ResultsListItem extends React.PureComponent {
+class ResultsListItem extends React.Component {
   static formatTime(duration) {
     const secs = Math.floor(duration / 1000);
     let ms = (duration % 1000).toString();
@@ -69,8 +72,20 @@ class ResultsListItem extends React.PureComponent {
   }
 
   _onDragStart(e) {
-    //e.preventDefault();
-    ipcRenderer.send('ondragstart', this.props.file.path);
+    e.preventDefault();
+    const multiPaths = this.props.sortedSelectedFiles.map(file => file.path);
+    ipcRenderer.send('ondragstart', this.props.file.path, multiPaths);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // don't compare sortedSelectedFiles
+    const compareProps = ['file', 'isSelected', 'isMultiSelected', 'top'];
+    for (const prop of compareProps) {
+      if (this.props[prop] !== nextProps[prop]) {
+        return true;
+      }
+    }
+    return false;
   }
 
   render() {
@@ -85,7 +100,7 @@ class ResultsListItem extends React.PureComponent {
     return (
       <li className={className}
         style={{top: top}} onClick={this.onClick} onDragStart={this.onDragStart}
-        >
+        draggable="true">
         <div className={styles.fileNameCell}>{file.fileName}</div>
         <div className={styles.otherCell}>{file.sampleRate}</div>
         <div className={styles.otherCell}>{file.bitDepth}</div>
@@ -270,7 +285,13 @@ class ScrollList extends React.PureComponent {
   }
 
   render() {
-    const {files, multiIds, selectFile, selectedFileId} = this.props;
+    const {
+      files,
+      multiIds,
+      selectFile,
+      selectedFileId,
+      sortedSelectedFiles
+    } = this.props;
     const totalHeight = files.length * this.constructor.rowHeight;
     const scrollTop = this.container ? this.container.scrollTop : 0;
     const viewportHeight = this.container ? this.container.offsetHeight : 0;
@@ -294,7 +315,8 @@ class ScrollList extends React.PureComponent {
                 return (
                   <ResultsListItem key={file.id} file={file} top={top}
                     selectFile={selectFile} isSelected={isSelected}
-                    isMultiSelected={isMultiSelected} />
+                    isMultiSelected={isMultiSelected}
+                    sortedSelectedFiles={sortedSelectedFiles} />
                 );
               }
             )}
@@ -342,7 +364,7 @@ class ResultsListMain extends React.Component {
     const {
       files, multiIds, selectFile, selectedFileId,
       sortType, sortDirection, setResultsSortType,
-      setResultsSortDirection} = this.props;
+      setResultsSortDirection, sortedSelectedFiles} = this.props;
 
     return (
       <div className={styles.list}>
@@ -351,7 +373,7 @@ class ResultsListMain extends React.Component {
         <Header />
         <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId}
           sortType={sortType} sortDirection={sortDirection}
-          multiIds={multiIds} />
+          multiIds={multiIds} sortedSelectedFiles={sortedSelectedFiles} />
       </div>
     );
   }

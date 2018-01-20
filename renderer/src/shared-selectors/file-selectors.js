@@ -40,7 +40,7 @@ export const nextFileSelector = createSelector(
   }
 );
 
-export const multiSelectedIdsSelector = createSelector(
+export const multiSelectedSelector = createSelector(
   sortedResultsSelector,
   selectRangesSelector,
   (results, ranges) => {
@@ -61,6 +61,7 @@ export const multiSelectedIdsSelector = createSelector(
 
     // collect all the selected ids
     const selectedIds = {};
+    const selectedFiles = [];
     for (const range of ranges) {
       const startIndex = idToIndex[range.startId];
       const endIndex = idToIndex[range.endId];
@@ -69,11 +70,26 @@ export const multiSelectedIdsSelector = createSelector(
 
       // iterate over the range
       for (let i = minIndex; i <= maxIndex; i++) {
-        const fileId = results[i].id;
-        selectedIds[fileId] = true;
+        const file = results[i];
+        selectedIds[file.id] = true;
+        selectedFiles.push({index: i, file});
       }
     }
 
-    return selectedIds;
+    // sort the selected files by their order in the list
+    selectedFiles.sort(
+      (a, b) => {
+        if (a.index < b.index) {
+          return -1;
+        } else if (a.index > b.index) {
+          return 1;
+        }
+        return 0;
+      }
+    );
+
+    const sortedSelectedFiles = selectedFiles.map(item => item.file);
+
+    return {selectedIds, sortedSelectedFiles};
   }
 );
