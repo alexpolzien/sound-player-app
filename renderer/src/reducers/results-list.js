@@ -9,6 +9,7 @@ import {SORT_ASC, SORT_FILE_NAME} from '../utils/file-sort-utils';
 const initialState = {
   files: {},
   selectedId: null,
+  multiIds: {},
   sort: {
     type: SORT_FILE_NAME,
     direction: SORT_ASC
@@ -27,9 +28,21 @@ export default function resultsList(state = initialState, action) {
         files
       };
     case LIST_SELECT_FILE_ID:
+      let multiIds;
+      console.log(action);
+      if (action.isMultiSelect) {
+        multiIds = {...state.multiIds, [action.id]: true};
+        if (state.selectedId) {
+          multiIds[state.selectedId] = true;
+        }
+      } else {
+        multiIds = {};
+      }
+
       return {
         ...state,
-        selectedId: action.id
+        selectedId: action.id,
+        multiIds
       };
     case RESULTS_SET_SORT_DIRECTION:
       return {

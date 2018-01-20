@@ -29,6 +29,7 @@ function mapState(state) {
   return {
     files: sortedResultsSelector(state),
     selectedFileId: state.resultsList.selectedId,
+    multiIds: state.resultsList.multiIds,
     sortType: state.resultsList.sort.type,
     sortDirection: state.resultsList.sort.direction
   };
@@ -60,21 +61,28 @@ class ResultsListItem extends React.PureComponent {
     this.onDragStart = this._onDragStart.bind(this);
   }
 
-  _onClick() {
-    this.props.selectFile(this.props.file);
+  _onClick(e) {
+    this.props.selectFile(this.props.file, e.nativeEvent.ctrlKey || e.nativeEvent.metaKey, e.nativeEvent.ctrlKey);
   }
 
   _onDragStart(e) {
-    e.preventDefault();
+    //e.preventDefault();
     ipcRenderer.send('ondragstart', this.props.file.path);
   }
 
   render() {
-    const {file, isSelected, top} = this.props;
+    const {file, isSelected, isMultiSelected, top} = this.props;
+    let className = '';
+    if (isSelected) {
+      className = styles.selectedItem;
+    } else if (isMultiSelected) {
+      className = styles.multiSelectedItem;
+    }
+
     return (
-      <li className={isSelected ? styles.selectedItem : ''}
+      <li className={className}
         style={{top: top}} onClick={this.onClick} onDragStart={this.onDragStart}
-        draggable="true">
+        >
         <div className={styles.fileNameCell}>{file.fileName}</div>
         <div className={styles.otherCell}>{file.sampleRate}</div>
         <div className={styles.otherCell}>{file.bitDepth}</div>
@@ -259,7 +267,7 @@ class ScrollList extends React.PureComponent {
   }
 
   render() {
-    const {files, selectFile, selectedFileId} = this.props;
+    const {files, multiIds, selectFile, selectedFileId} = this.props;
     const totalHeight = files.length * this.constructor.rowHeight;
     const scrollTop = this.container ? this.container.scrollTop : 0;
     const viewportHeight = this.container ? this.container.offsetHeight : 0;
@@ -279,9 +287,11 @@ class ScrollList extends React.PureComponent {
               {
                 const top = (i + topRowsHidden) * this.constructor.rowHeight;
                 const isSelected = file.id === selectedFileId;
+                const isMultiSelected = multiIds[file.id] === true;
                 return (
                   <ResultsListItem key={file.id} file={file} top={top}
-                    selectFile={selectFile} isSelected={isSelected} />
+                    selectFile={selectFile} isSelected={isSelected}
+                    isMultiSelected={isMultiSelected} />
                 );
               }
             )}
@@ -327,7 +337,7 @@ class ScrollList extends React.PureComponent {
 class ResultsListMain extends React.Component {
   render() {
     const {
-      files, selectFile, selectedFileId,
+      files, multiIds, selectFile, selectedFileId,
       sortType, sortDirection, setResultsSortType,
       setResultsSortDirection} = this.props;
 
@@ -337,7 +347,8 @@ class ResultsListMain extends React.Component {
           setType={setResultsSortType} setDirection={setResultsSortDirection} />
         <Header />
         <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId}
-          sortType={sortType} sortDirection={sortDirection} />
+          sortType={sortType} sortDirection={sortDirection}
+          multiIds={multiIds} />
       </div>
     );
   }

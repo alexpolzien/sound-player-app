@@ -97,3 +97,6 @@
 .selectedItem {
   background-color: #5c5c6c;
 }
+.multiSelectedItem {
+  background-color: #4c4c6c;
+}

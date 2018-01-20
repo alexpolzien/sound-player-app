@@ -32,7 +32,9 @@ function* selectFile(action) {
   // update selected file in UI
   yield put({
     type: LIST_SELECT_FILE_ID,
-    id: file.id
+    id: action.file.id,
+    isMultiSelect: action.isMultiSelect,
+    isRangeSelect: action.isRangeSelect
   });
 
   // stop playback

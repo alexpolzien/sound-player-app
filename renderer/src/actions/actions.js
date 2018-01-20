@@ -8,10 +8,12 @@ import {
   SELECT_FILE
 } from './action-types';
 
-export function selectFile(file) {
+export function selectFile(file, isMultiSelect, isRangeSelect) {
   return {
     type: SELECT_FILE,
-    file
+    file,
+    isMultiSelect,
+    isRangeSelect
   };
 }
 
