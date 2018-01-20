@@ -1,3 +1,4 @@
+import {ipcRenderer} from 'electron';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -56,16 +57,24 @@ class ResultsListItem extends React.PureComponent {
   constructor() {
     super(...arguments);
     this.onClick = this._onClick.bind(this);
+    this.onDragStart = this._onDragStart.bind(this);
   }
 
   _onClick() {
     this.props.selectFile(this.props.file);
   }
 
+  _onDragStart(e) {
+    e.preventDefault();
+    ipcRenderer.send('ondragstart', this.props.file.path);
+  }
+
   render() {
     const {file, isSelected, top} = this.props;
     return (
-      <li className={isSelected ? styles.selectedItem : ''} style={{top: top}} onClick={this.onClick}>
+      <li className={isSelected ? styles.selectedItem : ''}
+        style={{top: top}} onClick={this.onClick} onDragStart={this.onDragStart}
+        draggable="true">
         <div className={styles.fileNameCell}>{file.fileName}</div>
         <div className={styles.otherCell}>{file.sampleRate}</div>
         <div className={styles.otherCell}>{file.bitDepth}</div>
