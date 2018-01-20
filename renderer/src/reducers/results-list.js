@@ -17,6 +17,16 @@ const initialState = {
   }
 };
 
+function resetRanges(state) {
+  if (state.selectedId) {
+    return [{
+      startId: state.selectedId,
+      endId: state.selectedId
+    }];
+  }
+  return [];
+}
+
 export default function resultsList(state = initialState, action) {
   switch (action.type) {
     case DB_LOAD_INITIAL_RESULTS_SUCCESS:
@@ -53,22 +63,22 @@ export default function resultsList(state = initialState, action) {
         selectRanges
       };
     case RESULTS_SET_SORT_DIRECTION:
-      // TODO: reset ranges
       return {
         ...state,
         sort: {
           ...state.sort,
           direction: action.direction
-        }
+        },
+        selectRanges: resetRanges(state)
       };
     case RESULTS_SET_SORT_TYPE:
-      // TODO: reset ranges
       return {
         ...state,
         sort: {
           ...state.sort,
           type: action.sortType
-        }
+        },
+        selectRanges: resetRanges(state)
       };
     default:
       return state;
