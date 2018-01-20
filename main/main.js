@@ -38,10 +38,18 @@ function createWindow() {
 
   ipcMain.on('ondragstart', (event, filePath, multiPaths) => {
     // TODO: multiple files on Windows?
-    event.sender.startDrag({
-      files: multiPaths,
+
+    const dragAction = {
       icon: path.join(__dirname, 'drop-icon.png')
-    });
+    };
+
+    if (multiPaths !== undefined) {
+      dragAction.files = multiPaths;
+    } else {
+      dragAction.file = filePath;
+    }
+
+    event.sender.startDrag(dragAction);
   });
 }
 

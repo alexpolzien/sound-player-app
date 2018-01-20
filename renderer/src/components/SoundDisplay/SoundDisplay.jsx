@@ -1,17 +1,9 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 
 import styles from './SoundDisplay.css';
 import PlaybackTime from '../PlaybackTime/PlaybackTime.jsx';
+import WaveformDragSource from '../WaveformDragSource/WaveformDragSource.jsx';
 import WaveformView from '../WaveformView/WaveformView.jsx'
-
-function mapState(state) {
-  return {
-    file: state.audioCache.file,
-    buffer: state.audioCache.buffer
-  };
-}
 
 export default class SoundDisplay extends React.Component {
   render() {
@@ -24,9 +16,10 @@ export default class SoundDisplay extends React.Component {
         <div className={styles.time}>
           <PlaybackTime />
         </div>
+        <div className={styles.dragSource}>
+          <WaveformDragSource />
+        </div>
       </div>
     );
   }
 }
-
-// export default connect(mapState, null)(SoundDisplayMain);

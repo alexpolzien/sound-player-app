@@ -1,0 +1,3 @@
+.dragSource {
+  composes: absolute100 from '../../global-classes.css';
+}

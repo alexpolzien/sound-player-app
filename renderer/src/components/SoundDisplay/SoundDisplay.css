@@ -16,3 +16,7 @@
   right: 16px;
   bottom: 0px;
 }
+
+.dragSource {
+  composes: wave;
+}
