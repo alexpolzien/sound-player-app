@@ -8,18 +8,15 @@ import {AppContainer} from 'react-hot-loader';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import {DB_LOAD_INITIAL_RESULTS} from './actions/action-types';
 import {DB_LOAD_INITIAL_RESULTS, PLAYBACK_SET_STOPPED} from './actions/action-types';
 import App from './components/App/App.jsx';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
-import {initPlayerEvents} from './sound-player-service/sound-player-events';
-import {initPlayer} from './sound-player-service/sound-player-service';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     stateSanitizer: state => {
       const bufferCache = state.bufferCache;
       const sanitizedCache = {};
