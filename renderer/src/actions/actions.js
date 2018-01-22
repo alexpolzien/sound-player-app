@@ -1,4 +1,5 @@
 import {
+  IMPORT_CREATE_NEW,
   PLAYBACK_SET_VOLUME,
   PLAYBACK_TOGGLE_AUTO_PLAY,
   PLAYBACK_TOGGLE_CYCLE_PLAY,
@@ -7,6 +8,7 @@ import {
   RESULTS_SET_SORT_TYPE,
   SELECT_FILE
 } from './action-types';
+import {getUniqueId} from '../utils/id-utils';
 
 export function selectFile(file, newRange, addToRange) {
   return {
@@ -40,5 +42,13 @@ export function setResultsSortDirection(direction) {
   return {
     type: RESULTS_SET_SORT_DIRECTION,
     direction
+  };
+}
+
+export function createNewImport(filePaths) {
+  return {
+    type: IMPORT_CREATE_NEW,
+    id: getUniqueId(),
+    filePaths
   };
 }

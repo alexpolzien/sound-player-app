@@ -11,6 +11,7 @@ import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import {DB_LOAD_INITIAL_RESULTS, PLAYBACK_SET_STOPPED} from './actions/action-types';
+import {createNewImport} from './actions/actions';
 import App from './components/App/App.jsx';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
@@ -30,9 +31,9 @@ const pool = new WorkerPool(
   1000
 );
 
-for (let i = 0; i < 100; i++) {
+/*for (let i = 0; i < 100; i++) {
   pool.requestJob({});
-}
+}*/
 
 // end worker test stuff
 
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ipcRenderer.on('importfiles', (event, message) => {
   console.log('got import files message', event ,message);
+  store.dispatch(createNewImport(message));
 });
 
 if (module.hot) {
