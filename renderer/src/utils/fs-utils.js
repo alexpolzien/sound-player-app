@@ -52,3 +52,11 @@ export function flattenPaths(filePaths) {
     }
   );
 }
+
+export function filterExtensions(filePaths, extensions) {
+  extensions = extensions.map(ext => ext.toLowerCase());
+  return filePaths.filter(filePath => {
+    const extension = path.extname(filePath).toLowerCase();
+    return extensions.indexOf(extension) !== -1;
+  });
+}

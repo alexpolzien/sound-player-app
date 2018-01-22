@@ -4,7 +4,11 @@ import {
   takeEvery
 } from 'redux-saga/effects';
 
-import {flattenPaths} from '../utils/fs-utils';
+import {ALLOWED_FILE_EXTENSIONS} from '../constants';
+import {
+  flattenPaths,
+  filterExtensions
+} from '../utils/fs-utils';
 
 import {
   IMPORT_CREATE_NEW
@@ -12,8 +16,9 @@ import {
 
 function* createNew(action) {
   console.log('createNew', action);
-  const paths = yield call(flattenPaths, action.filePaths);
-  console.log(paths);
+  let {files, errors} = yield call(flattenPaths, action.filePaths);
+  files = filterExtensions(files, ALLOWED_FILE_EXTENSIONS);
+  console.log(files);
 }
 
 function* watchCreateNew() {
