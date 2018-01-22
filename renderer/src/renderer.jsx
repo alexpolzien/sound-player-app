@@ -85,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 ipcRenderer.on('importfiles', (event, message) => {
-  console.log('got import files message', event ,message);
   store.dispatch(createNewImport(message));
 });
 
