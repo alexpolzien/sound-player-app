@@ -9,6 +9,6 @@ onmessage = function(e) {
     5000
   );*/
   for (let i = 0; i <= 100; i++) {
-    postMessage({num: i});
+    //postMessage({num: i});
   }
 }

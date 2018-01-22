@@ -2,7 +2,7 @@ require('./main.css');
 
 require('react-hot-loader/patch');
 
-import {remote} from 'electron';
+import {ipcRenderer, remote} from 'electron';
 const os = remote.require('os');
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -81,6 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
     store.dispatch({type: PLAYBACK_SET_STOPPED});
   });
   renderApp(App);
+});
+
+ipcRenderer.on('importfiles', (event, message) => {
+  console.log('got import files message', event ,message);
 });
 
 if (module.hot) {
