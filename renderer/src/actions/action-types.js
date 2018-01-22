@@ -22,3 +22,4 @@ export const PLAYBACK_SET_STOPPED = 'PLAYBACK_SET_STOPPED';
 
 // imports
 export const IMPORT_CREATE_NEW = 'IMPORT_CREATE_NEW';
+export const IMPORT_PATHS = 'IMPORT_PATHS';

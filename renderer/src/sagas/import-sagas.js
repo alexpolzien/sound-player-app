@@ -1,6 +1,7 @@
 import {
   all,
   call,
+  put,
   takeEvery
 } from 'redux-saga/effects';
 
@@ -11,14 +12,18 @@ import {
 } from '../utils/fs-utils';
 
 import {
-  IMPORT_CREATE_NEW
+  IMPORT_CREATE_NEW,
+  IMPORT_PATHS
 } from '../actions/action-types';
 
 function* createNew(action) {
-  console.log('createNew', action);
   let {files, errors} = yield call(flattenPaths, action.filePaths);
   files = filterExtensions(files, ALLOWED_FILE_EXTENSIONS);
-  console.log(files);
+  yield put({
+    type: IMPORT_PATHS,
+    id: action.id,
+    filePaths: files
+  });
 }
 
 function* watchCreateNew() {
