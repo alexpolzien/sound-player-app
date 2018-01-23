@@ -2,7 +2,6 @@ import AV from 'av';
 
 onmessage = function(e) {
   const message = e.data;
-  console.log(message);
 
   switch (message.jobType) {
     case 'metadata':
@@ -34,7 +33,7 @@ function decodeMetaData(message) {
     ([format, duration]) => {
       asset.stop();
       postMessage({
-        messageType: 'metadata',
+        responseType: 'metadata',
         sampleRate: format.sampleRate,
         channels: format.channelsPerFrame,
         bitDepth: format.bitsPerChannel,

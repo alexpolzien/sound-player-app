@@ -1,10 +1,10 @@
 export default class WorkerPool {
-  constructor(newWorkerCallback, messageHandler, numWorkers, isDoneCallback, sleepTime) {
+  constructor(newWorkerCallback, numWorkers, isDoneCallback, sleepTime) {
     this.jobQ = []; // FILO queue of job messages to do
     this.newWorkerCallback = newWorkerCallback; // function that returns new worker instance
-    this.messageHandler = messageHandler; // called when message received from workers
     this.isDoneCallback = isDoneCallback; // takes a message from a worker and returns true if the job is done
     this.workers = [];
+    this.messageListeners = [];
 
     const onmessage = this._onmessage.bind(this);
 
@@ -39,7 +39,6 @@ export default class WorkerPool {
 
       const worker = this.workers[index];
       if (!worker.assignedJob) {
-        console.log(`assigning to worker ${index}`);
         worker.assignedJob = jobMessage;
         worker.startTime = new Date();
         worker.worker.postMessage(jobMessage);
@@ -89,6 +88,14 @@ export default class WorkerPool {
     }
   }
 
+  addMessageListener(callback) {
+    this.messageListeners.push(callback);
+  }
+
+  removeMessageListener(callback) {
+    this.messageListeners = this.messageListeners.filter(fn => fn !== callback);
+  }
+
   _onmessage(workerIndex, event) {
     const isDone = this.isDoneCallback(event);
     // clear the assigned job if the job is done
@@ -97,7 +104,7 @@ export default class WorkerPool {
       worker.assignedJob = null;
       worker.startTime = null; // TODO: Performance timings
     }
-    this.messageHandler(event);
+    this.messageListeners.forEach(callback => {callback(event)});
   }
 
   // TODO: handle worker error and timeout

@@ -81,7 +81,7 @@ function* watchImportOne() {
   yield takeEvery(IMPORT_ONE_PATH, readOneFile);
 }
 
-function* processBuffer(action) {
+/*function* processBuffer(action) {
   decoderPool.requestJob({
     jobType: 'metadata',
     buffer: action.buffer,
@@ -92,11 +92,10 @@ function* processBuffer(action) {
 
 function* watchBufferRead() {
   yield takeEvery(IMPORT_BUFFER_READ, processBuffer);
-}
+}*/
 
 export default function* rootImportsSaga() {
   yield all([
-    watchBufferRead(),
     watchCreateNew(),
     watchImportOne()
   ]);

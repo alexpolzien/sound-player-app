@@ -13,29 +13,10 @@ import createSagaMiddleware from 'redux-saga';
 import {DB_LOAD_INITIAL_RESULTS, PLAYBACK_SET_STOPPED} from './actions/action-types';
 import {createNewImport} from './actions/actions';
 import App from './components/App/App.jsx';
+import {decoderMiddleware} from './decode-service/decode-service';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
-
-// worker test stuff
-import TestWorker from './workers/test-worker.worker';
-import WorkerPool from './worker-pool/WorkerPool';
-
-const pool = new WorkerPool(
-  () => new TestWorker(),
-  (e) => {
-    console.log('got message from worker', e.data.num);
-  },
-  os.cpus().length,
-  (e) => e.data.num === 100,
-  1000
-);
-
-/*for (let i = 0; i < 100; i++) {
-  pool.requestJob({});
-}*/
-
-// end worker test stuff
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
@@ -61,7 +42,7 @@ window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   }) : compose;
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware))
+  composeEnhancers(applyMiddleware(sagaMiddleware, decoderMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 store.dispatch({type: DB_LOAD_INITIAL_RESULTS});
@@ -77,6 +58,8 @@ function renderApp(RootComponent) {
 
 document.addEventListener('DOMContentLoaded', () => {
   initPlayer(window);
+
+  // TODO: use middleware instead
   const player = getPlayer();
   player.addStopListener(() => {
     store.dispatch({type: PLAYBACK_SET_STOPPED});
@@ -84,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderApp(App);
 });
 
+// TODO: use middleware instead
 ipcRenderer.on('importfiles', (event, message) => {
   store.dispatch(createNewImport(message));
 });
