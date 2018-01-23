@@ -82,7 +82,12 @@ function* watchImportOne() {
 }
 
 function* processBuffer(action) {
-  decoderPool.requestJob({buffer: action.buffer});
+  decoderPool.requestJob({
+    jobType: 'metadata',
+    buffer: action.buffer,
+    filePath: action.filePath,
+    importId: action.importId
+  });
 }
 
 function* watchBufferRead() {

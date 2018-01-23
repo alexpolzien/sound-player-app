@@ -93,7 +93,6 @@ export default class WorkerPool {
     const isDone = this.isDoneCallback(event);
     // clear the assigned job if the job is done
     if (isDone) {
-      this.workers[workerIndex].assignedJob = null;
       const worker = this.workers[workerIndex];
       worker.assignedJob = null;
       worker.startTime = null; // TODO: Performance timings
