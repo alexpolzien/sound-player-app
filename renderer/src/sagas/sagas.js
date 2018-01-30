@@ -25,7 +25,6 @@ import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
-import rootImportsSaga from './import-sagas';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 
 function* selectFile(action) {
@@ -135,7 +134,6 @@ export default function* rootSaga() {
     watchDbLoadInitialResults(),
     watchSelectFile(),
     watchStopped(),
-    watchTogglePlay(),
-    rootImportsSaga()
+    watchTogglePlay()
   ]);
 }

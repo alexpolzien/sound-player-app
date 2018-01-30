@@ -15,6 +15,7 @@ import {createNewImport} from './actions/actions';
 import App from './components/App/App.jsx';
 import {decoderMiddleware} from './decode-service/decode-service';
 import {importerMiddleware} from './importer-service/importer-service';
+import {ipcMiddleware} from './ipc-middleware/ipc-middleware';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
@@ -43,7 +44,7 @@ window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   }) : compose;
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware, decoderMiddleware, importerMiddleware))
+  composeEnhancers(applyMiddleware(sagaMiddleware, decoderMiddleware, importerMiddleware, ipcMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 store.dispatch({type: DB_LOAD_INITIAL_RESULTS});

@@ -9,6 +9,8 @@ const isDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
 
+const ImportReader = require('./import-reader');
+
 let win;
 
 function createWindow() {
@@ -62,6 +64,10 @@ function createWindow() {
     }
 
     event.sender.startDrag(dragAction);
+  });
+
+  ipcMain.on('read-import-files', (event, importId, filePaths) => {
+    ImportReader.readImportFiles(event, importId, filePaths);
   });
 }
 
