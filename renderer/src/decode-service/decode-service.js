@@ -63,7 +63,7 @@ export const decoderPool = new WorkerPool(
       return true;
     }
   },
-  16
+  50
 );
 
 const createDecoderMiddleware = () => store => {
