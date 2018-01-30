@@ -1,6 +1,7 @@
 import {
   IMPORT_METADATA_DECODED,
-  IMPORT_READY_TO_INSERT
+  IMPORT_READY_TO_INSERT,
+  IMPORT_REMOVE_IMPORT
 } from '../actions/action-types';
 
 function allFilesComplete(theImport) {

@@ -60,3 +60,21 @@
 .cancelButton:after {
   transform: translate(-50%, -50%) rotate(45deg);
 }
+
+.listEnter {
+  opacity: 0.01;
+  transform: translateY(25px);
+}
+.listEnterActive {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-in, transform 300ms linear;
+}
+.listLeave {
+  opacity: 1;
+}
+.listLeaveActive {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+  transition-delay: 5s;
+}

@@ -1,8 +1,10 @@
 import {
   IMPORT_CREATE_NEW,
   IMPORT_METADATA_DECODED,
+  IMPORT_REMOVE_IMPORT,
   IMPORT_PATHS
 } from '../actions/action-types';
+import {copyWithoutEntries} from '../utils/object-utils';
 
 const initialState = {
   activeImports: {}
@@ -69,6 +71,11 @@ export default function imports(state = initialState, action) {
           ...state.activeImports,
           [importId]: newImport
         }
+      };
+    case IMPORT_REMOVE_IMPORT:
+      return {
+        ...state,
+        activeImports: copyWithoutEntries(state.activeImports, action.id)
       };
     default:
       return state;
