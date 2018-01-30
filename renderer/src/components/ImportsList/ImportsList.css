@@ -1,0 +1,13 @@
+.import {
+  composes: noselect from '../../global-classes.css';
+  background-color: rgba(24, 24, 40, 0.95);
+  border-radius: 4px;
+  color: #fcfcfc;
+  margin-bottom: 6px;
+  padding: 10px 15px;
+}
+
+.progress {
+  margin-bottom: 2px;
+  margin-top: 8px;
+}

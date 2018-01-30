@@ -22,11 +22,12 @@ import {
   SORT_ASC,
   SORT_DESC
 } from '../../utils/file-sort-utils';
-import styles from './ResultsList.css';
 import {
   multiSelectedSelector,
   sortedResultsSelector
 } from '../../shared-selectors/file-selectors';
+import ImportsList from '../ImportsList/ImportsList.jsx';
+import styles from './ResultsList.css';
 
 function mapState(state) {
   const {selectedIds, sortedSelectedFiles} = multiSelectedSelector(state);
@@ -374,6 +375,7 @@ class ResultsListMain extends React.Component {
         <ScrollList files={files} selectFile={selectFile} selectedFileId={selectedFileId}
           sortType={sortType} sortDirection={sortDirection}
           multiIds={multiIds} sortedSelectedFiles={sortedSelectedFiles} />
+        <div className={styles.importsContainer}><ImportsList /></div>
       </div>
     );
   }

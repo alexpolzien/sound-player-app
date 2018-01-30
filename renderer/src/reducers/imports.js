@@ -16,6 +16,8 @@ export default function imports(state = initialState, action) {
         activeImports: {
           ...state.activeImports,
           [action.id]: {
+            id: action.id,
+            timeCreated: action.timeCreated,
             files: {}
           }
         }
