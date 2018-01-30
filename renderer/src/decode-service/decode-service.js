@@ -66,7 +66,7 @@ export const decoderPool = new WorkerPool(
   16
 );
 
-const createDecoderMiddleWare = () => store => {
+const createDecoderMiddleware = () => store => {
   decoderPool.addMessageListener(event => {
     const message = event.data;
 
@@ -95,4 +95,4 @@ const createDecoderMiddleWare = () => store => {
   }
 }
 
-export const decoderMiddleware = createDecoderMiddleWare();
+export const decoderMiddleware = createDecoderMiddleware();

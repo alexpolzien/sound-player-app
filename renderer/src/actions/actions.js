@@ -49,6 +49,7 @@ export function createNewImport(filePaths) {
   return {
     type: IMPORT_CREATE_NEW,
     id: getUniqueId(),
+    timeCreated: (new Date()).getTime(),
     filePaths
   };
 }

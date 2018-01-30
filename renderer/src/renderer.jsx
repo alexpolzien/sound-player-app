@@ -14,6 +14,7 @@ import {DB_LOAD_INITIAL_RESULTS, PLAYBACK_SET_STOPPED} from './actions/action-ty
 import {createNewImport} from './actions/actions';
 import App from './components/App/App.jsx';
 import {decoderMiddleware} from './decode-service/decode-service';
+import {importerMiddleware} from './importer-service/importer-service';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
@@ -42,7 +43,7 @@ window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   }) : compose;
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware, decoderMiddleware))
+  composeEnhancers(applyMiddleware(sagaMiddleware, decoderMiddleware, importerMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 store.dispatch({type: DB_LOAD_INITIAL_RESULTS});
