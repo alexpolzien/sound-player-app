@@ -7,7 +7,8 @@ import {
 function allFilesComplete(theImport) {
   // return true if all files have completed decoding
   for (const path in theImport.files) {
-    if (theImport.files[path].status === 'decoding') {
+    const status = theImport.files[path].status;
+    if (status !== 'error' && status !== 'decoded') {
       return false;
     }
   }

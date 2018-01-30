@@ -2,7 +2,8 @@ import {ipcRenderer} from 'electron';
 
 import {
   IMPORT_BUFFER_READ,
-  IMPORT_CREATE_NEW
+  IMPORT_CREATE_NEW,
+  IMPORT_READ_STATS
 } from '../actions/action-types';
 
 const createIpcMiddleware = () => store => {
@@ -13,6 +14,15 @@ const createIpcMiddleware = () => store => {
       filePath,
       importId
     })
+  });
+
+  ipcRenderer.on('import-read-files-stats', (event, importId, files, errors) => {
+    store.dispatch({
+      type: IMPORT_READ_STATS,
+      importId,
+      files,
+      errors
+    });
   });
 
   return next => action => {

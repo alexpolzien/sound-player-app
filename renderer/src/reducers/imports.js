@@ -1,8 +1,8 @@
 import {
   IMPORT_CREATE_NEW,
   IMPORT_METADATA_DECODED,
-  IMPORT_REMOVE_IMPORT,
-  IMPORT_PATHS
+  IMPORT_READ_STATS,
+  IMPORT_REMOVE_IMPORT
 } from '../actions/action-types';
 import {copyWithoutEntries} from '../utils/object-utils';
 
@@ -24,54 +24,68 @@ export default function imports(state = initialState, action) {
           }
         }
       };
-    case IMPORT_PATHS:
-      if (!(action.id in state.activeImports)) {
-        throw new Error(`Bad import id ${action.id}`);
-      } else {
-        const files = {};
-        for (const path of action.filePaths) {
-          files[path] = {status: 'decoding'};
+    case IMPORT_READ_STATS:
+      {
+        const importId = action.importId;
+        if (!(importId in state.activeImports)) {
+          throw new Error(`Bad import id ${importId}`);
+        } else {
+          const files = {...state.activeImports[importId].files};
+          for (const filePath of action.files) {
+            if (!(filePath in files)) {
+              files[filePath] = {status: 'reading'};
+            }
+          }
+
+          for (const filePath of action.errors) {
+            if (!(filePath in files)) {
+              files[filePath] = {status: 'error'};
+            }
+          }
+
+          return {
+            ...state,
+            activeImports: {
+              ...state.activeImports,
+              [importId]: {
+                ...state.activeImports[importId],
+                files
+              }
+            }
+          };
         }
+      }
+    case IMPORT_METADATA_DECODED:
+      {
+        const importId = action.importId;
+        if (!(importId in state.activeImports)) {
+          throw new Error(`Bad import id ${importId}`);
+        }
+        const oldImport = state.activeImports[importId];
+        const oldFile = oldImport.files[action.filePath];
+        const newFile = {
+          ...oldFile,
+          status: 'decoded',
+          bitDepth: action.bitDepth,
+          channels: action.channels,
+          durationMs: action.durationMs,
+          sampleRate: action.sampleRate
+        };
+        const newImport = {
+          ...oldImport,
+          files: {
+            ...oldImport.files,
+            [action.filePath]: newFile
+          }
+        };
         return {
           ...state,
           activeImports: {
             ...state.activeImports,
-            [action.id]: {
-              ...state.activeImports[action.id],
-              files
-            }
+            [importId]: newImport
           }
         };
       }
-    case IMPORT_METADATA_DECODED:
-      const importId = action.importId;
-      if (!(importId in state.activeImports)) {
-        throw new Error(`Bad import id ${importId}`);
-      }
-      const oldImport = state.activeImports[importId];
-      const oldFile = oldImport.files[action.filePath];
-      const newFile = {
-        ...oldFile,
-        status: 'decoded',
-        bitDepth: action.bitDepth,
-        channels: action.channels,
-        durationMs: action.durationMs,
-        sampleRate: action.sampleRate
-      };
-      const newImport = {
-        ...oldImport,
-        files: {
-          ...oldImport.files,
-          [action.filePath]: newFile
-        }
-      };
-      return {
-        ...state,
-        activeImports: {
-          ...state.activeImports,
-          [importId]: newImport
-        }
-      };
     case IMPORT_REMOVE_IMPORT:
       return {
         ...state,
