@@ -26,6 +26,15 @@ function mapState(state) {
   };
 }
 
+class CancelButton extends React.Component {
+  // TODO: cancel action
+  render() {
+    return (
+      <div className={styles.cancelButton}></div>
+    );
+  }
+}
+
 class ImportItem extends React.Component {
   countFiles(predicate) {
     let count = 0;
@@ -48,15 +57,28 @@ class ImportItem extends React.Component {
 
   render() {
     const anImport = this.props.import;
+    const totalFiles = this.totalFilesCount;
+
+    if (totalFiles === 0) {
+      return null;
+    }
+
+    const progress = this.completedFilesCount / totalFiles;
+
     return (
       <div className={styles.import}>
-        Importing {this.totalFilesCount} files
-        <div className={styles.progress}>
-          <ProgressBar width={140} height={4}
-            radius={2} progress={0.5}
-            borderColor="rgba(255, 255, 255, 0.7)"
-            borderWidth={1}
-            barColor="#fcfcfc" />
+        <div className={styles.main}>
+          Importing {this.totalFilesCount} files
+          <div className={styles.progress}>
+            <ProgressBar width={140} height={4}
+              radius={2} progress={progress}
+              borderColor="rgba(255, 255, 255, 0.7)"
+              borderWidth={1}
+              barColor="#fcfcfc" />
+          </div>
+        </div>
+        <div className={styles.cancelBox}>
+          <CancelButton importId={anImport.id} />
         </div>
       </div>
     );
