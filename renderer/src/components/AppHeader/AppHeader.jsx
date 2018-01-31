@@ -6,19 +6,14 @@ import {togglePanel} from '../../actions/actions';
 import styles from './AppHeader.css';
 
 function mapState(state) {
-  return {
-    ...state.activePanels
-  };
+  return {...state.activePanels};
 }
 
 function mapDispatch(dispatch) {
-  return bindActionCreators({
-    togglePanel
-  },
-  dispatch);
+  return bindActionCreators({togglePanel}, dispatch);
 }
 
-class HeaderItem extends React.Component {
+class HeaderItem extends React.PureComponent {
   constructor() {
     super(...arguments);
     this.onClick = this._onClick.bind(this);
@@ -36,7 +31,7 @@ class HeaderItem extends React.Component {
   }
 }
 
-class AppHeaderMain extends React.Component {
+class AppHeaderMain extends React.PureComponent {
   static items = [
     ['libraries', 'Libraries'],
     ['tags', 'Tags'],

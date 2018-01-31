@@ -1,6 +1,7 @@
 import React from 'react';
 
 import AppHeader from '../AppHeader/AppHeader.jsx';
+import PanelContainer from '../PanelContainer/PanelContainer.jsx';
 import PlaybackControls from '../PlaybackControls/PlaybackControls.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
 import SoundDisplay from '../SoundDisplay/SoundDisplay.jsx';
@@ -14,7 +15,7 @@ export default class AppLayout extends React.Component {
           <AppHeader />
         </div>
         <div className={styles.panels}>
-          panels here
+          <PanelContainer />
         </div>
         <div className={styles.player}>
           <SoundDisplay />
