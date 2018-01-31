@@ -36,17 +36,6 @@ function* initApp(action) {
   const libraries = yield call(getLibraries);
   console.log(libraries);
 
-  setTimeout(
-    () => {
-      const menu = Menu.getApplicationMenu();
-      console.log(menu);
-      const item = new MenuItem({label: 'foo', click: () => {console.log('clicked')}});
-      menu.append(item);
-      console.log(menu.items);
-      Menu.setApplicationMenu(menu);
-    },
-    5000
-  );
 }
 
 function* watchInitApp() {

@@ -35,3 +35,8 @@ export const IMPORT_REMOVE_IMPORT = 'IMPORT_REMOVE_IMPORT';
 
 // library
 export const SET_LIBRARY_ID = 'SET_LIBRARY_ID';
+
+// panels
+export const SET_PANEL_OFF = 'SET_PANEL_OFF';
+export const SET_PANEL_ON = 'SET_PANEL_ON';
+export const TOGGLE_PANEL = 'TOGGLE_PANEL';

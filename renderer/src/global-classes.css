@@ -9,3 +9,9 @@
 .noselect {
   -webkit-user-select: none;
 }
+
+.clickable {
+  composes: noselect;
+  
+  cursor: default;
+}

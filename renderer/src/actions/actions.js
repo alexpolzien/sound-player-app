@@ -6,7 +6,10 @@ import {
   PLAYBACK_TOGGLE_PLAY,
   RESULTS_SET_SORT_DIRECTION,
   RESULTS_SET_SORT_TYPE,
-  SELECT_FILE
+  SET_PANEL_OFF,
+  SET_PANEL_ON,
+  SELECT_FILE,
+  TOGGLE_PANEL
 } from './action-types';
 import {getUniqueId} from '../utils/id-utils';
 
@@ -51,5 +54,26 @@ export function createNewImport(filePaths) {
     id: getUniqueId(),
     timeCreated: (new Date()).getTime(),
     filePaths
+  };
+}
+
+export function setPanelOn(name) {
+  return {
+    type: SET_PANEL_ON,
+    name
+  };
+}
+
+export function setPanelOff(name) {
+  return {
+    type: SET_PANEL_OFF,
+    name
+  };
+}
+
+export function togglePanel(name) {
+  return {
+    type: TOGGLE_PANEL,
+    name
   };
 }

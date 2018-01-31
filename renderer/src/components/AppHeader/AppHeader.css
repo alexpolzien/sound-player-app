@@ -1,0 +1,32 @@
+.container {
+  composes: absolute100 from '../../global-classes.css';
+
+  box-sizing: border-box;
+  border-bottom: 2px solid #3c3c4c;
+}
+
+.item {
+  composes: clickable from '../../global-classes.css';
+
+  border-right: 2px solid #3c3c4c;
+  box-sizing: border-box;
+  cursor: default;
+  font-family: Arial;
+  font-size: 13px;
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+}
+
+.itemOn {
+  composes: item;
+
+  color: #fcfcfc;
+}
+
+.itemOff {
+  composes: item;
+
+  color: rgba(255, 255, 255, 0.6);
+}
