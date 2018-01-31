@@ -1,3 +1,6 @@
+// app
+export const INIT_APP = 'INIT_APP';
+
 // audio files
 export const SELECT_FILE = 'SELECT_FILE';
 export const BUFFER_FETCHED_FROM_CACHE_SUCCESS = 'BUFFER_FETCHED_FROM_CACHE_SUCCESS';
@@ -29,3 +32,6 @@ export const IMPORT_ONE_PATH = 'IMPORT_ONE_PATH';
 export const IMPORT_READ_STATS = 'IMPORT_READ_STATS';
 export const IMPORT_READY_TO_INSERT = 'IMPORT_READY_TO_INSERT';
 export const IMPORT_REMOVE_IMPORT = 'IMPORT_REMOVE_IMPORT';
+
+// library
+export const SET_LIBRARY_ID = 'SET_LIBRARY_ID';
