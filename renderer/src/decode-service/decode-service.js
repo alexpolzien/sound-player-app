@@ -1,6 +1,15 @@
 import AV from 'av';
 import {remote} from 'electron';
 const fs = remote.require('fs');
+const os = remote.require('os');
+
+import {
+  IMPORT_BUFFER_READ,
+  IMPORT_METADATA_DECODED
+} from '../actions/action-types';
+import DecoderWorker from '../workers/decoder-worker.worker';
+import {copyWithoutEntries} from '../utils/object-utils';
+import WorkerPool from '../worker-pool/WorkerPool';
 
 function getFileBuffer(filePath) {
   return new Promise(
@@ -42,6 +51,48 @@ function decodeFileBuffer(buffer) {
 }
 
 export function decodeFile(filePath) {
-  //const filePath = path.join(SOUNDS_DIR, filename);
   return getFileBuffer(filePath).then(decodeFileBuffer);
 }
+
+// begin worker pool version
+export const decoderPool = new WorkerPool(
+  () => new DecoderWorker(),
+  os.cpus().length,
+  (e) => {
+    if (e.data.responseType === 'metadata') {
+      return true;
+    }
+  },
+  50
+);
+
+const createDecoderMiddleware = () => store => {
+  decoderPool.addMessageListener(event => {
+    const message = event.data;
+
+    switch (message.responseType) {
+      case 'metadata':
+        store.dispatch({
+          type: IMPORT_METADATA_DECODED,
+          ...copyWithoutEntries(message, 'responseType')
+        })
+      default:
+        break;
+    }
+  });
+
+  return next => action => {
+    if (action.type === IMPORT_BUFFER_READ) {
+      decoderPool.requestJob({
+        jobType: 'metadata',
+        buffer: action.buffer,
+        filePath: action.filePath,
+        importId: action.importId
+      });
+    }
+
+    next(action);
+  }
+}
+
+export const decoderMiddleware = createDecoderMiddleware();

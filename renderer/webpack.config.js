@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const WrapperPlugin = require('wrapper-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -50,12 +51,22 @@ module.exports = {
       {
         test: /\.coffee$/,
         use: ['coffee-loader']
+      },
+      {
+        test: /\.worker\.js$/,
+        use: {
+          loader: 'worker-loader'
+        }
       }
     ]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
+    new WrapperPlugin({
+      test: /\.worker\.js$/,
+      header: 'var global = self;\n'
+    })
   ],
   target: 'electron-renderer'
 };

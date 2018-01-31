@@ -1,12 +1,26 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  Menu
+} = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
 
+const ImportReader = require('./import-reader');
+
 let win;
 
 function createWindow() {
-  win = new BrowserWindow({width: 1200, height: 800});
+  win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegrationInWorker: true
+    }
+  });
 
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -51,6 +65,48 @@ function createWindow() {
 
     event.sender.startDrag(dragAction);
   });
+
+  ipcMain.on('read-import-files', (event, importId, filePaths) => {
+    ImportReader.readImportFiles(event, importId, filePaths);
+  });
 }
 
-app.on('ready', createWindow);
+function createMenu() {
+  const template = [
+    {
+      label: 'Main',
+      submenu: [
+        {
+          label: 'Import Files',
+          click: openImportDialog
+        }
+      ]
+    }
+  ];
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
+function openImportDialog(menuItem, browserWindow, event) {
+  const options = {
+    title: 'Import Files',
+    buttonLabel: 'Import',
+    properties: [
+      'openFile',
+      'openDirectory',
+      'multiSelections'
+    ]
+  };
+  dialog.showOpenDialog(options, onImport);
+}
+
+function onImport(filenames) {
+  win.webContents.send('importfiles', filenames);
+}
+
+function onReady() {
+  createWindow();
+  createMenu();
+}
+
+app.on('ready', onReady);

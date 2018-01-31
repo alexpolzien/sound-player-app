@@ -9,27 +9,17 @@ export const SORT_PLAYS = 'SORT_PLAYS';
 export const SORT_ASC = 'SORT_ASC';
 export const SORT_DESC = 'SORT_DESC';
 
-function sortCompare(file1, file2, getKey) {
-  const key1 = getKey(file1);
-  const key2 = getKey(file2);
-
-  if (key1 < key2) {
-    return -1;
-  } else if (key1 > key2) {
-    return 1;
-  }
-  return 0;
-}
+import {basicCompare} from './sort-utils';
 
 function sortFilesArray(filesArray, getSortKey, sortDirection, getTieBreakerKey) {
   filesArray.sort(
     (file1, file2) => {
-      let cmpResult = sortCompare(file1, file2, getSortKey);
+      let cmpResult = basicCompare(file1, file2, getSortKey);
       if (sortDirection === 'SORT_DESC') {
         cmpResult = cmpResult * -1;
       }
       if (cmpResult === 0 && typeof getTieBreakerKey === 'function') {
-        cmpResult = sortCompare(file1, file2, getTieBreakerKey);
+        cmpResult = basicCompare(file1, file2, getTieBreakerKey);
       }
       return cmpResult;
     }

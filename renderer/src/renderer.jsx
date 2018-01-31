@@ -2,14 +2,26 @@ require('./main.css');
 
 require('react-hot-loader/patch');
 
+import {ipcRenderer, remote} from 'electron';
+const os = remote.require('os');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import {DB_LOAD_INITIAL_RESULTS, PLAYBACK_SET_STOPPED} from './actions/action-types';
+import {
+  DB_LOAD_INITIAL_RESULTS,
+  INIT_APP,
+  PLAYBACK_SET_STOPPED
+} from './actions/action-types';
+import {createNewImport} from './actions/actions';
 import App from './components/App/App.jsx';
+import {initDb} from './db-service/db-service-2';
+import {decoderMiddleware} from './decode-service/decode-service';
+import {importerMiddleware} from './importer-service/importer-service';
+import {ipcMiddleware} from './ipc-middleware/ipc-middleware';
+import ls, {localStorageMiddleware} from './local-storage-service/local-storage-service';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
@@ -38,10 +50,19 @@ window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   }) : compose;
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware))
+  composeEnhancers(
+    applyMiddleware(sagaMiddleware, decoderMiddleware,
+      importerMiddleware, ipcMiddleware, localStorageMiddleware)
+  )
 );
 sagaMiddleware.run(rootSaga);
-store.dispatch({type: DB_LOAD_INITIAL_RESULTS});
+
+ls.init(window);
+
+initDb(window);
+
+//store.dispatch({type: DB_LOAD_INITIAL_RESULTS});
+//store.dispatch({type: INIT_APP});
 
 function renderApp(RootComponent) {
   ReactDOM.render(
@@ -50,15 +71,23 @@ function renderApp(RootComponent) {
     </AppContainer>,
     document.getElementById('app')
   );
+  store.dispatch({type: INIT_APP});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   initPlayer(window);
+
+  // TODO: use middleware instead
   const player = getPlayer();
   player.addStopListener(() => {
     store.dispatch({type: PLAYBACK_SET_STOPPED});
   });
   renderApp(App);
+});
+
+// TODO: use middleware instead
+ipcRenderer.on('importfiles', (event, message) => {
+  store.dispatch(createNewImport(message));
 });
 
 if (module.hot) {

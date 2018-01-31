@@ -5,3 +5,13 @@
   right: 0;
   top: 0;
 }
+
+.noselect {
+  -webkit-user-select: none;
+}
+
+.clickable {
+  composes: noselect;
+  
+  cursor: default;
+}

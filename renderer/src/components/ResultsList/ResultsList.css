@@ -101,3 +101,9 @@
 .multiSelectedItem {
   background-color: #4c4c6c;
 }
+
+.importsContainer {
+  bottom: 0;
+  position: absolute;
+  right: 22px;
+}

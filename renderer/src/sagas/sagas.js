@@ -1,4 +1,3 @@
-
 import {delay} from 'redux-saga';
 import {
   all,
@@ -8,6 +7,8 @@ import {
   takeEvery,
   takeLatest
 } from 'redux-saga/effects';
+const {remote} = require('electron');
+const {Menu, MenuItem} = remote;
 
 import {
   BUFFER_FETCHED_FROM_CACHE_SUCCESS,
@@ -15,6 +16,7 @@ import {
   DB_LOAD_INITIAL_RESULTS_FAIL,
   DB_LOAD_INITIAL_RESULTS_START,
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
+  INIT_APP,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
@@ -24,8 +26,21 @@ import {
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
+import {getLibraries} from '../db-service/db-service-2';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
+import ls from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
+
+function* initApp(action) {
+  const libraryId = ls.libraryId;
+  const libraries = yield call(getLibraries);
+  console.log(libraries);
+
+}
+
+function* watchInitApp() {
+  yield takeLatest(INIT_APP, initApp);
+}
 
 function* selectFile(action) {
   const file = action.file;
@@ -132,6 +147,7 @@ function* watchStopped() {
 export default function* rootSaga() {
   yield all([
     watchDbLoadInitialResults(),
+    watchInitApp(),
     watchSelectFile(),
     watchStopped(),
     watchTogglePlay()
