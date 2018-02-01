@@ -17,7 +17,7 @@ import {
 } from './actions/action-types';
 import {createNewImport} from './actions/actions';
 import App from './components/App/App.jsx';
-import {initDb} from './db-service/db-service-2';
+import {initDb} from './db-service/db-service';
 import {decoderMiddleware} from './decode-service/decode-service';
 import {importerMiddleware} from './importer-service/importer-service';
 import {ipcMiddleware} from './ipc-middleware/ipc-middleware';

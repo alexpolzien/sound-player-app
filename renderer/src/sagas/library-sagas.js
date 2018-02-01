@@ -12,7 +12,7 @@ import {
 import {
   createLibrary,
   getLibraries
-} from '../db-service/db-service-2';
+} from '../db-service/db-service';
 
 export function* doCreateLibrary(action) {
   let result;
