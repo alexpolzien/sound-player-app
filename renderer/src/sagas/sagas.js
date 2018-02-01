@@ -14,9 +14,6 @@ import {
   BUFFER_FETCHED_FROM_CACHE_SUCCESS,
   INIT_APP,
   LIBRARY_CREATE_NEW,
-  LIBRARIES_FETCH_ALL_ERROR,
-  LIBRARIES_FETCH_ALL_SUCCESS,
-  LIBRARIES_FETCH_ALL_START,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
@@ -26,30 +23,18 @@ import {
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
-import {
-  createLibrary,
-  getLibraries
-} from '../db-service/db-service-2';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
+import {
+  doCreateLibrary,
+  fetchLibraries
+} from './library-sagas';
 import ls from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 
 function* initApp(action) {
   const libraryId = ls.libraryId;
-  yield put({type: LIBRARIES_FETCH_ALL_START});
 
-  let libraries;
-  try {
-    libraries = yield call(getLibraries);
-  } catch (err) {
-    // TODO: error
-  }
-  if (libraries) {
-    yield put({
-      type: LIBRARIES_FETCH_ALL_SUCCESS,
-      libraries
-    });
-  }
+  yield call(fetchLibraries);
 }
 
 function* watchInitApp() {
@@ -139,27 +124,6 @@ function* onStopped() {
 
 function* watchStopped() {
   yield takeLatest(PLAYBACK_SET_STOPPED, onStopped);
-}
-
-function* fetchLibraries() {
-
-}
-
-function* doCreateLibrary(action) {
-  let result;
-  try {
-    result = yield call(createLibrary, action.name);
-  } catch (error) {
-    console.log(error); // TODO: handle constraint error
-  }
-
-  if (result) {
-    const libraries = yield call(getLibraries);
-    yield put({
-      type: LIBRARIES_UPDATED,
-      libraries
-    });
-  }
 }
 
 function* watchCreateLibrary() {
