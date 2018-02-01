@@ -3,6 +3,8 @@
 }
 
 .inner {
+  composes: scrollbars from '../../global-classes.css';
+
   background-color: #18181e;
   bottom: 0px;
   overflow-y: scroll;

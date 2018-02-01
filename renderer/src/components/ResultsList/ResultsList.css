@@ -75,6 +75,7 @@
 }
 
 .scrollList {
+  composes: scrollbars from '../../global-classes.css';
   bottom: 0;
   left: 0;
   overflow-y: scroll;

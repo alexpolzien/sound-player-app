@@ -12,6 +12,16 @@
 
 .clickable {
   composes: noselect;
-  
+
   cursor: default;
+}
+
+.scrollbars::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbars::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.scrollbars::-webkit-scrollbar-thumb {
+  background-color: #3c3c4c;
 }
