@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import styles from './PanelContainer.css';
 import LibrariesPanel from '../LibrariesPanel/LibrariesPanel.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
+import withBreakpoints from '../enhancers/with-breakpoints.jsx';
 
 function mapState(state) {
   return {...state.activePanels};
@@ -25,17 +26,19 @@ class Panel extends React.PureComponent {
 
 class PanelContainerMain extends React.PureComponent {
   static panels = [
-    ['libraries', '220px', LibrariesPanel, props => props.libraries],
-    ['tags', '220px', null, props => props.tags],
-    ['list', 'auto', ResultsList, _ => true]
+    ['libraries', '220px', '320px', LibrariesPanel, props => props.libraries],
+    ['tags', '220px', '320px', null, props => props.tags],
+    ['list', 'auto', 'auto', ResultsList, _ => true]
   ];
   render() {
+    const {widthBreakpoint} = this.props;
     const columns = [];
     const items = [];
 
-    for (const [key, width, Component, activeFn] of this.constructor.panels) {
+    for (const [key, smallWidth, bigWidth, Component, activeFn] of this.constructor.panels) {
       const isActive = activeFn(this.props);
       if (isActive) {
+        const width = widthBreakpoint === 'small' ? smallWidth : bigWidth;
         columns.push(width);
         items.push([key, Component]);
       }
@@ -61,4 +64,7 @@ class PanelContainerMain extends React.PureComponent {
   }
 }
 
-export default connect(mapState, null)(PanelContainerMain);
+const breakpoints = [['small', 1300], ['big']];
+const PanelContainerWithBreakpoints = withBreakpoints(PanelContainerMain, breakpoints, null);
+
+export default connect(mapState, null)(PanelContainerWithBreakpoints);

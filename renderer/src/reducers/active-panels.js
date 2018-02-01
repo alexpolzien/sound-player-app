@@ -5,7 +5,7 @@ import {
 } from '../actions/action-types';
 
 const initialState = {
-  libraries: false,
+  libraries: true,
   tags: false,
   info: false
 };

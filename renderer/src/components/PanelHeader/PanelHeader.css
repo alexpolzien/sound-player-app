@@ -16,10 +16,11 @@
 
 .closeX {
   composes: clickable from '../../global-classes.css';
-  
+
   height: 24px;
   float: right;
   opacity: 0.6;
+  margin-right: 12px;
   position: relative;
   width: 24px;
 }
