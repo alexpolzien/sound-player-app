@@ -14,3 +14,6 @@ export const ENTER_KEY = 13;
 // database
 export const DATABASE_NAME = 'sound-app-db';
 export const DATABASE_VERSION = 1;
+
+// saved state
+export const SAVED_STATE_SCHEMA_VERSION = 1;

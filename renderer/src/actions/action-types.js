@@ -1,5 +1,6 @@
 // app
-export const INIT_APP = 'INIT_APP';
+export const APP_INIT = 'APP_INIT';
+export const APP_STATE_RECALLED = 'APP_STATE_RECALLED';
 
 // audio files
 export const SELECT_FILE = 'SELECT_FILE';

@@ -12,7 +12,7 @@ import createSagaMiddleware from 'redux-saga';
 
 import {
   DB_LOAD_INITIAL_RESULTS,
-  INIT_APP,
+  APP_INIT,
   PLAYBACK_SET_STOPPED
 } from './actions/action-types';
 import {createNewImport} from './actions/actions';
@@ -21,7 +21,7 @@ import {initDb} from './db-service/db-service-2';
 import {decoderMiddleware} from './decode-service/decode-service';
 import {importerMiddleware} from './importer-service/importer-service';
 import {ipcMiddleware} from './ipc-middleware/ipc-middleware';
-import ls, {localStorageMiddleware} from './local-storage-service/local-storage-service';
+import {initLocalStorage, localStorageMiddleware} from './local-storage-service/local-storage-service';
 import rootReducer from './reducers/reducers';
 import rootSaga from './sagas/sagas';
 import {getPlayer, initPlayer} from './sound-player-service/sound-player-service';
@@ -57,12 +57,12 @@ const store = createStore(
 );
 sagaMiddleware.run(rootSaga);
 
-ls.init(window);
+initLocalStorage(window);
 
 initDb(window);
 
 //store.dispatch({type: DB_LOAD_INITIAL_RESULTS});
-//store.dispatch({type: INIT_APP});
+//store.dispatch({type: APP_INIT});
 
 function renderApp(RootComponent) {
   ReactDOM.render(
@@ -71,7 +71,7 @@ function renderApp(RootComponent) {
     </AppContainer>,
     document.getElementById('app')
   );
-  store.dispatch({type: INIT_APP});
+  store.dispatch({type: APP_INIT});
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,5 +1,4 @@
 import {
-  DB_LOAD_INITIAL_RESULTS_SUCCESS,
   LIST_SELECT_FILE_ID,
   RESULTS_SET_SORT_DIRECTION,
   RESULTS_SET_SORT_TYPE
@@ -29,7 +28,7 @@ function resetRanges(state) {
 
 export default function resultsList(state = initialState, action) {
   switch (action.type) {
-    case DB_LOAD_INITIAL_RESULTS_SUCCESS:
+    /*case DB_LOAD_INITIAL_RESULTS_SUCCESS:
       const files = {};
       action.results.forEach(result => {
         files[result.id] = result;
@@ -37,7 +36,7 @@ export default function resultsList(state = initialState, action) {
       return {
         ...state,
         files
-      };
+      };*/
     case LIST_SELECT_FILE_ID:
       let selectRanges;
       if (action.newRange) {

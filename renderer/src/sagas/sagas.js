@@ -12,7 +12,8 @@ const {Menu, MenuItem} = remote;
 
 import {
   BUFFER_FETCHED_FROM_CACHE_SUCCESS,
-  INIT_APP,
+  APP_INIT,
+  APP_STATE_RECALLED,
   LIBRARY_CREATE_NEW,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
@@ -28,17 +29,19 @@ import {
   doCreateLibrary,
   fetchLibraries
 } from './library-sagas';
-import ls from '../local-storage-service/local-storage-service';
+import {loadState} from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 
 function* initApp(action) {
-  const libraryId = ls.libraryId;
-
+  const savedState = loadState();
+  if (savedState) {
+    yield put({type: APP_STATE_RECALLED, savedState});
+  }
   yield call(fetchLibraries);
 }
 
 function* watchInitApp() {
-  yield takeLatest(INIT_APP, initApp);
+  yield takeLatest(APP_INIT, initApp);
 }
 
 function* selectFile(action) {
