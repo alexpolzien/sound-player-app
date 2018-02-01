@@ -12,13 +12,11 @@ const {Menu, MenuItem} = remote;
 
 import {
   BUFFER_FETCHED_FROM_CACHE_SUCCESS,
-  DB_LOAD_INITIAL_RESULTS,
-  DB_LOAD_INITIAL_RESULTS_FAIL,
-  DB_LOAD_INITIAL_RESULTS_START,
-  DB_LOAD_INITIAL_RESULTS_SUCCESS,
   INIT_APP,
   LIBRARY_CREATE_NEW,
-  LIBRARIES_UPDATED,
+  LIBRARIES_FETCH_ALL_ERROR,
+  LIBRARIES_FETCH_ALL_SUCCESS,
+  LIBRARIES_FETCH_ALL_START,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
@@ -38,11 +36,20 @@ import {getPlayer, waitForStop} from '../sound-player-service/sound-player-servi
 
 function* initApp(action) {
   const libraryId = ls.libraryId;
-  const libraries = yield call(getLibraries);
-  yield put({
-    type: LIBRARIES_UPDATED,
-    libraries
-  });
+  yield put({type: LIBRARIES_FETCH_ALL_START});
+
+  let libraries;
+  try {
+    libraries = yield call(getLibraries);
+  } catch (err) {
+    // TODO: error
+  }
+  if (libraries) {
+    yield put({
+      type: LIBRARIES_FETCH_ALL_SUCCESS,
+      libraries
+    });
+  }
 }
 
 function* watchInitApp() {
@@ -91,23 +98,6 @@ function* watchSelectFile() {
   yield takeEvery(SELECT_FILE, selectFile);
 }
 
-function* dbLoadInitialResults() {
-  yield put({type: DB_LOAD_INITIAL_RESULTS_START});
-  try {
-    const results = yield call(getInitialResults);
-    yield put({
-      type: DB_LOAD_INITIAL_RESULTS_SUCCESS,
-      results
-    });
-  } catch (e) {
-    yield put({type: DB_LOAD_INITIAL_RESULTS_FAIL, message: e.message});
-  }
-}
-
-function* watchDbLoadInitialResults() {
-  yield takeLatest(DB_LOAD_INITIAL_RESULTS, dbLoadInitialResults);
-}
-
 function selectedFileSelector(state) {
   const resultsList = state.resultsList;
   if (resultsList.selectedId === null) {
@@ -151,6 +141,10 @@ function* watchStopped() {
   yield takeLatest(PLAYBACK_SET_STOPPED, onStopped);
 }
 
+function* fetchLibraries() {
+
+}
+
 function* doCreateLibrary(action) {
   let result;
   try {
@@ -174,7 +168,6 @@ function* watchCreateLibrary() {
 
 export default function* rootSaga() {
   yield all([
-    watchDbLoadInitialResults(),
     watchCreateLibrary(),
     watchInitApp(),
     watchSelectFile(),
