@@ -17,6 +17,7 @@ import {
   DB_LOAD_INITIAL_RESULTS_START,
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
   INIT_APP,
+  LIBRARY_CREATE_NEW,
   LIBRARIES_UPDATED,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
@@ -27,7 +28,10 @@ import {
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {getInitialResults} from '../db-service/db-service';
-import {getLibraries} from '../db-service/db-service-2';
+import {
+  createLibrary,
+  getLibraries
+} from '../db-service/db-service-2';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
 import ls from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
@@ -147,9 +151,31 @@ function* watchStopped() {
   yield takeLatest(PLAYBACK_SET_STOPPED, onStopped);
 }
 
+function* doCreateLibrary(action) {
+  let result;
+  try {
+    result = yield call(createLibrary, action.name);
+  } catch (error) {
+    console.log(error); // TODO: handle constraint error
+  }
+
+  if (result) {
+    const libraries = yield call(getLibraries);
+    yield put({
+      type: LIBRARIES_UPDATED,
+      libraries
+    });
+  }
+}
+
+function* watchCreateLibrary() {
+  yield takeEvery(LIBRARY_CREATE_NEW, doCreateLibrary);
+}
+
 export default function* rootSaga() {
   yield all([
     watchDbLoadInitialResults(),
+    watchCreateLibrary(),
     watchInitApp(),
     watchSelectFile(),
     watchStopped(),

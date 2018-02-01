@@ -5,13 +5,15 @@
 .inner {
   background-color: #18181e;
   bottom: 0px;
+  overflow-y: scroll;
   position: absolute;
   left: 12px;
   right: 12px;
   top: 0px;
 }
 
-
+.list {
+}
 
 .box {
   border-bottom: 1px solid #222;

@@ -13,15 +13,24 @@ const db = new Promise(
   }
 );
 
+function handleError(reject) {
+  // takes a resolve function and returns a function that rejects with the db error
+
+  return (e) => {
+    reject(e.target.error);
+  }
+}
+
 export function initDb(windowObj) {
   const request = windowObj.indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
 
   request.onupgradeneeded = (e) => {
-    console.log('upgrade');
     // create db here
     const database = e.target.result;
 
     const librariesStore = database.createObjectStore('libraries', {autoIncrement: true});
+    librariesStore.createIndex('name', 'name', {unique: true});
+
     // test library
     librariesStore.transaction.oncomplete = (e) => {
       const store = database.transaction('libraries', 'readwrite').objectStore('libraries');
@@ -41,6 +50,17 @@ export function initDb(windowObj) {
   request.onerror = (e) => {
     // TODO
   }
+}
+
+export function createLibrary(name) {
+  return db.then(db => new Promise(
+    (resolve, reject) => {
+      const store = db.transaction('libraries', 'readwrite').objectStore('libraries');
+      const request = store.add({name});
+      request.onsuccess = resolve;
+      request.onerror = handleError(reject);
+    }
+  ));
 }
 
 export function getLibraries() {
