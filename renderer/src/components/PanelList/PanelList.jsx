@@ -11,7 +11,15 @@ class ListItem extends React.Component {
 
   _onClick(e) {
     e.preventDefault();
-    this.props.onSelect(this.props.id);
+    if (this.props.multiSelect) {
+      if (this.props.selected) {
+        this.props.onUnselect(this.props.id);
+      } else {
+        this.props.onSelect(this.props.id);
+      }
+    } else {
+      this.props.onSelect(this.props.id);
+    }
   }
 
   render() {
@@ -72,7 +80,7 @@ class AddBox extends React.Component {
 
 export default class PanelList extends React.Component {
   render() {
-    const {items, selectedIds, onSelect, onAdd} = this.props;
+    const {items, selectedIds, onSelect, onAdd, multiSelect, onUnselect} = this.props;
 
     return (
       <div className={styles.container}>
@@ -82,7 +90,8 @@ export default class PanelList extends React.Component {
             {items.map(item => {
               const selected = item.id in selectedIds;
               return (<ListItem key={item.id} id={item.id} label={item.label}
-                selected={selected} onSelect={onSelect} />);
+                selected={selected} onSelect={onSelect}
+                multiSelect={multiSelect} onUnselect={onUnselect} />);
             })}
           </ul>
         </div>

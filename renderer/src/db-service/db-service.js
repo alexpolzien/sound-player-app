@@ -21,6 +21,10 @@ function handleError(reject) {
   }
 }
 
+function getTimestamp() {
+  return (new Date()).getTime();
+}
+
 export function initDb(windowObj) {
   const request = windowObj.indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
 
@@ -78,7 +82,22 @@ export function createLibrary(name) {
   return db.then(db => new Promise(
     (resolve, reject) => {
       const store = db.transaction('libraries', 'readwrite').objectStore('libraries');
-      const request = store.add({name});
+      const request = store.add({name, timeCreated: getTimestamp()});
+      request.onsuccess = resolve;
+      request.onerror = handleError(reject);
+    }
+  ));
+}
+
+export function createTag(name, libraryId) {
+  return db.then(db => new Promise(
+    (resolve, reject) => {
+      const store = db.transaction('tags', 'readwrite').objectStore('tags');
+      const request = store.add({
+        name,
+        libraryId,
+        timeCreated: getTimestamp()
+      });
       request.onsuccess = resolve;
       request.onerror = handleError(reject);
     }

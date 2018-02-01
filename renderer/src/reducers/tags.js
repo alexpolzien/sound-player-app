@@ -1,11 +1,15 @@
 import {
   TAGS_FETCH_ERROR,
   TAGS_FETCH_START,
-  TAGS_FETCH_SUCCESS
+  TAGS_FETCH_SUCCESS,
+  TAGS_SELECT_ID,
+  TAGS_UNSELECT_ID
 } from '../actions/action-types';
+import {copyWithoutEntries} from '../utils/object-utils';
 
 const initialState = {
   tags: {},
+  selectedIds: {},
   status: 'init'
 };
 
@@ -26,6 +30,21 @@ export default function tags(state = initialState, action) {
         ...state,
         status: 'loaded',
         tags: action.tags
+      };
+    case TAGS_SELECT_ID:
+      return {
+        ...state,
+        selectedIds: {
+          ...state.selectedIds,
+          [action.id]: true
+        }
+      };
+    case TAGS_UNSELECT_ID:
+      const ids = {...state.selectedIds};
+      delete ids[action.id];
+      return {
+        ...state,
+        selectedIds: ids
       };
     default:
       return state;

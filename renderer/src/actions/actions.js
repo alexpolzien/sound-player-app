@@ -11,6 +11,9 @@ import {
   SET_PANEL_OFF,
   SET_PANEL_ON,
   SELECT_FILE,
+  TAGS_CREATE_NEW,
+  TAGS_SELECT_ID,
+  TAGS_UNSELECT_ID,
   TOGGLE_PANEL
 } from './action-types';
 import {getUniqueId} from '../utils/id-utils';
@@ -92,4 +95,26 @@ export function createLibrary(name) {
     type: LIBRARY_CREATE_NEW,
     name
   };
+}
+
+export function selectTag(id) {
+  return {
+    type: TAGS_SELECT_ID,
+    id
+  };
+}
+
+export function unselectTag(id) {
+  return {
+    type: TAGS_UNSELECT_ID,
+    id
+  };
+}
+
+export function createTag(name, libraryId) {
+  return {
+    type: TAGS_CREATE_NEW,
+    name,
+    libraryId
+  }
 }

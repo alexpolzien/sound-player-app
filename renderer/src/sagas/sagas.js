@@ -23,18 +23,16 @@ import {
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
   PLAYBACK_TOGGLE_PLAY,
-  SELECT_FILE
+  SELECT_FILE,
+  TAGS_CREATE_NEW
 } from '../actions/action-types';
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
-import {
-  doCreateLibrary,
-  fetchLibraries
-} from './library-sagas';
+import {doCreateLibrary, fetchLibraries} from './library-sagas';
 import {loadState} from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
-import {fetchTags} from './tag-sagas';
+import {doCreateTag, fetchTags} from './tag-sagas';
 
 function* initApp(action) {
   const savedState = loadState();
@@ -126,6 +124,10 @@ function* watchCreateLibrary() {
   yield takeEvery(LIBRARY_CREATE_NEW, doCreateLibrary);
 }
 
+function* watchCreateTag() {
+  yield takeEvery(TAGS_CREATE_NEW, doCreateTag);
+}
+
 function* watchInitApp() {
   yield takeLatest(APP_INIT, initApp);
 }
@@ -149,6 +151,7 @@ function* watchTogglePlay() {
 export default function* rootSaga() {
   yield all([
     watchCreateLibrary(),
+    watchCreateTag(),
     watchInitApp(),
     watchLibrarySetId(),
     watchSelectFile(),
