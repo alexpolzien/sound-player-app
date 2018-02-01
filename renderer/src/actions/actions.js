@@ -1,5 +1,6 @@
 import {
   IMPORT_CREATE_NEW,
+  LIBRARY_SET_ID,
   PLAYBACK_SET_VOLUME,
   PLAYBACK_TOGGLE_AUTO_PLAY,
   PLAYBACK_TOGGLE_CYCLE_PLAY,
@@ -76,4 +77,11 @@ export function togglePanel(name) {
     type: TOGGLE_PANEL,
     name
   };
+}
+
+export function setLibraryId(id) {
+  return {
+    type: LIBRARY_SET_ID,
+    id
+  }
 }
