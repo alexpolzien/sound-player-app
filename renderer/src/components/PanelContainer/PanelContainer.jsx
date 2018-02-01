@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import styles from './PanelContainer.css';
 import LibrariesPanel from '../LibrariesPanel/LibrariesPanel.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
+import TagsPanel from '../TagsPanel/TagsPanel.jsx';
 import withBreakpoints from '../enhancers/with-breakpoints.jsx';
 
 function mapState(state) {
@@ -27,7 +28,7 @@ class Panel extends React.PureComponent {
 class PanelContainerMain extends React.PureComponent {
   static panels = [
     ['libraries', '220px', '320px', LibrariesPanel, props => props.libraries],
-    ['tags', '220px', '320px', null, props => props.tags],
+    ['tags', '220px', '320px', TagsPanel, props => props.tags],
     ['list', 'auto', 'auto', ResultsList, _ => true]
   ];
   render() {
