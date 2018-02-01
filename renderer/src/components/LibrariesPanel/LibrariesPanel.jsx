@@ -2,7 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {setPanelOff, setLibraryId} from '../../actions/actions';
+import {
+  createLibrary,
+  setPanelOff,
+  setLibraryId
+} from '../../actions/actions';
 import styles from './LibrariesPanel.css';
 import {sortedLibrariesSelector} from '../../shared-selectors/library-selectors';
 import PanelHeader from '../PanelHeader/PanelHeader.jsx';
@@ -17,6 +21,7 @@ function mapState(state) {
 
 function mapDispatch(dispatch) {
   return bindActionCreators({
+    createLibrary,
     setLibraryId,
     setPanelOff
   }, dispatch);
@@ -27,6 +32,7 @@ class LibrariesPanelMain extends React.Component {
     super(...arguments);
     this.closePanel = this._closePanel.bind(this);
     this.setLibraryId = this._setLibraryId.bind(this);
+    this.createLibrary = this._createLibrary.bind(this);
   }
 
   _closePanel() {
@@ -35,6 +41,10 @@ class LibrariesPanelMain extends React.Component {
 
   _setLibraryId(id) {
     this.props.setLibraryId(id);
+  }
+
+  _createLibrary(name) {
+    this.props.createLibrary(name);
   }
 
   render() {
@@ -49,7 +59,7 @@ class LibrariesPanelMain extends React.Component {
         </div>
         <div className={styles.list}>
           <PanelList items={items} selectedIds={selectedIds}
-            onSelect={this.setLibraryId} />
+            onSelect={this.setLibraryId} onAdd={this.createLibrary} />
         </div>
       </div>
     );

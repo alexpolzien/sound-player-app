@@ -1,5 +1,6 @@
 import {
   IMPORT_CREATE_NEW,
+  LIBRARY_CREATE_NEW,
   LIBRARY_SET_ID,
   PLAYBACK_SET_VOLUME,
   PLAYBACK_TOGGLE_AUTO_PLAY,
@@ -83,5 +84,12 @@ export function setLibraryId(id) {
   return {
     type: LIBRARY_SET_ID,
     id
-  }
+  };
+}
+
+export function createLibrary(name) {
+  return {
+    type: LIBRARY_CREATE_NEW,
+    name
+  };
 }
