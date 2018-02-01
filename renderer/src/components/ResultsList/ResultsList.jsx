@@ -172,7 +172,9 @@ class SortHeader extends React.Component {
 
     return (
       <div className={styles.sortHeader}>
+        <span className={styles.headerTitle}>Files</span>
         <div className={styles.sortControls}>
+
           <div>
             <SortMenu sortType={sortType} setType={setType} />
           </div>

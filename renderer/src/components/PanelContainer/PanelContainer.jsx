@@ -2,13 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import styles from './PanelContainer.css';
+import LibrariesPanel from '../LibrariesPanel/LibrariesPanel.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
 
 function mapState(state) {
   return {...state.activePanels};
 }
 
-class Panel extends React.Component {
+class Panel extends React.PureComponent {
   render() {
     const {columnStart, columnEnd, children} = this.props;
     const style = {
@@ -22,9 +23,9 @@ class Panel extends React.Component {
   }
 }
 
-class PanelContainerMain extends React.Component {
+class PanelContainerMain extends React.PureComponent {
   static panels = [
-    ['libraries', '220px', null, props => props.libraries],
+    ['libraries', '220px', LibrariesPanel, props => props.libraries],
     ['tags', '220px', null, props => props.tags],
     ['list', 'auto', ResultsList, _ => true]
   ];

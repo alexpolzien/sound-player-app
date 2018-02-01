@@ -17,6 +17,7 @@ import {
   DB_LOAD_INITIAL_RESULTS_START,
   DB_LOAD_INITIAL_RESULTS_SUCCESS,
   INIT_APP,
+  LIBRARIES_UPDATED,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
@@ -34,8 +35,10 @@ import {getPlayer, waitForStop} from '../sound-player-service/sound-player-servi
 function* initApp(action) {
   const libraryId = ls.libraryId;
   const libraries = yield call(getLibraries);
-  console.log(libraries);
-
+  yield put({
+    type: LIBRARIES_UPDATED,
+    libraries
+  });
 }
 
 function* watchInitApp() {

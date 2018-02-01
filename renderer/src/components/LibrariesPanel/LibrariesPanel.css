@@ -1,0 +1,5 @@
+.container {
+  composes: absolute100 from '../../global-classes.css';
+
+  background-color: orange;
+}

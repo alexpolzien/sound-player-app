@@ -1,5 +1,5 @@
 import {
-  SET_LIBRARY_ID
+  LIBRARY_SET_ID
 } from '../actions/action-types';
 
 class LocalStorage {
@@ -27,7 +27,7 @@ export default ls;
 const createLocalStorageMiddleware = () => store => {
   return next => action => {
     switch (action.type) {
-      case SET_LIBRARY_ID:
+      case LIBRARY_SET_ID:
         ls.libraryId = action.id;
         break;
       default:

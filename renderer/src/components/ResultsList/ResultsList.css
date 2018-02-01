@@ -28,6 +28,14 @@
   padding: 0 8px;
 }
 
+.headerTitle {
+  composes: noselect from '../../global-classes.css';
+
+  letter-spacing: 1px;
+  line-height: 24px;
+  padding-left: 12px;
+  text-transform: uppercase;
+}
 .sortHeader {
   composes: header;
   position: relative;
@@ -35,7 +43,7 @@
 .sortControls {
   bottom: 0;
   position: absolute;
-  top: 0;
+  top: 2px;
   right: 15px;
 }
 .sortControls > div {

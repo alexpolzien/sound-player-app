@@ -1,11 +1,10 @@
 .container {
   composes: absolute100 from '../../global-classes.css';
 
-  background-color: orange;
   display: grid;
   grid-template-rows: auto;
 }
 
 .panel {
-  border: 1px dashed green;
+  position: relative;
 }
