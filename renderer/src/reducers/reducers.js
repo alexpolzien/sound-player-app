@@ -7,6 +7,7 @@ import imports from './imports';
 import libraries from './libraries';
 import playback from './playback';
 import resultsList from './results-list';
+import tags from './tags';
 
 export default combineReducers({
   activePanels,
@@ -15,5 +16,6 @@ export default combineReducers({
   imports,
   libraries,
   playback,
-  resultsList
+  resultsList,
+  tags
 });

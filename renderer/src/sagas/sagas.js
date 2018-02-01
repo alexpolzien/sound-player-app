@@ -11,10 +11,14 @@ const {remote} = require('electron');
 const {Menu, MenuItem} = remote;
 
 import {
+  setLibraryId
+} from '../actions/actions';
+import {
   BUFFER_FETCHED_FROM_CACHE_SUCCESS,
   APP_INIT,
   APP_STATE_RECALLED,
   LIBRARY_CREATE_NEW,
+  LIBRARY_SET_ID,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
@@ -30,6 +34,7 @@ import {
 } from './library-sagas';
 import {loadState} from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
+import {fetchTags} from './tag-sagas';
 
 function* initApp(action) {
   const savedState = loadState();
@@ -37,10 +42,11 @@ function* initApp(action) {
     yield put({type: APP_STATE_RECALLED, savedState});
   }
   yield call(fetchLibraries);
-}
 
-function* watchInitApp() {
-  yield takeLatest(APP_INIT, initApp);
+  // if there is a saved library id, set it TODO: load tags instead?
+  if (savedState.libraries.selectedId) {
+    yield put(setLibraryId(savedState.libraries.selectedId));
+  }
 }
 
 function* selectFile(action) {
@@ -81,10 +87,6 @@ function* selectFile(action) {
   }
 }
 
-function* watchSelectFile() {
-  yield takeEvery(SELECT_FILE, selectFile);
-}
-
 function selectedFileSelector(state) {
   const resultsList = state.resultsList;
   if (resultsList.selectedId === null) {
@@ -107,10 +109,6 @@ function* togglePlay() {
   }
 }
 
-function* watchTogglePlay() {
-  yield takeLatest(PLAYBACK_TOGGLE_PLAY, togglePlay);
-}
-
 function cyclePlaySelector(state) {
   return state.playback.cyclePlay;
 }
@@ -124,18 +122,35 @@ function* onStopped() {
   }
 }
 
+function* watchCreateLibrary() {
+  yield takeEvery(LIBRARY_CREATE_NEW, doCreateLibrary);
+}
+
+function* watchInitApp() {
+  yield takeLatest(APP_INIT, initApp);
+}
+
+function* watchLibrarySetId() {
+  yield takeLatest(LIBRARY_SET_ID, fetchTags);
+}
+
+function* watchSelectFile() {
+  yield takeEvery(SELECT_FILE, selectFile);
+}
+
 function* watchStopped() {
   yield takeLatest(PLAYBACK_SET_STOPPED, onStopped);
 }
 
-function* watchCreateLibrary() {
-  yield takeEvery(LIBRARY_CREATE_NEW, doCreateLibrary);
+function* watchTogglePlay() {
+  yield takeLatest(PLAYBACK_TOGGLE_PLAY, togglePlay);
 }
 
 export default function* rootSaga() {
   yield all([
     watchCreateLibrary(),
     watchInitApp(),
+    watchLibrarySetId(),
     watchSelectFile(),
     watchStopped(),
     watchTogglePlay()

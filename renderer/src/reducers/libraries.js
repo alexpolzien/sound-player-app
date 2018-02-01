@@ -1,5 +1,4 @@
 import {
-  APP_STATE_RECALLED,
   LIBRARY_SET_ID,
   LIBRARIES_FETCH_ALL_ERROR,
   LIBRARIES_FETCH_ALL_START,
@@ -14,16 +13,15 @@ const initialState = {
 
 export default function libraries(state = initialState, action) {
   switch (action.type) {
-    case APP_STATE_RECALLED:
-      return {
-        ...state,
-        selectedId: action.savedState.libraries.selectedId
-      };
     case LIBRARY_SET_ID:
-      return {
-        ...state,
-        selectedId: action.id
-      };
+      if (action.id in state.libraries) {
+        return {
+          ...state,
+          selectedId: action.id
+        };
+      } else {
+        return state;
+      }
     case LIBRARIES_FETCH_ALL_ERROR:
       return {
         ...state,
