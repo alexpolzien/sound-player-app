@@ -31,15 +31,37 @@ export function initDb(windowObj) {
     const librariesStore = database.createObjectStore('libraries', {autoIncrement: true});
     librariesStore.createIndex('name', 'name', {unique: true});
 
-    // test library
-    librariesStore.transaction.oncomplete = (e) => {
-      const store = database.transaction('libraries', 'readwrite').objectStore('libraries');
-      store.add({name: 'test library 1'});
-      store.add({name: 'test library 2'});
-    }
-
     const importsStore = database.createObjectStore('imports', {keyPath: 'id'});
     importsStore.createIndex('libraryId', 'libraryId', {unique: false});
+
+    const tagsStore = database.createObjectStore('tags', {autoIncrement: true});
+    tagsStore.createIndex('libraryId', 'libraryId', {unique: false});
+
+    // test db items
+    tagsStore.transaction.oncomplete = (e) => {
+      const trans = database.transaction(['libraries', 'tags'], 'readwrite');
+
+      const timeStamp = (new Date()).getTime();
+      const libStore = trans.objectStore('libraries');
+
+      libStore.add({name: 'Test Library #1', timeCreated: timeStamp});
+      libStore.add({name: 'Test Library #2', timeCreated: timeStamp});
+
+      const tagsStore = trans.objectStore('tags');
+
+      for (let i = 1; i <=2; i++) {
+        for (let j = 1; j <= 10; j++) {
+          const name = `Tag #${j}`;
+          const timeCreated = (new Date()).getTime();
+          const tag = {
+            name,
+            timeCreated,
+            libraryId: i
+          }
+          tagsStore.add(tag);
+        }
+      }
+    }
   }
 
   request.onsuccess = (e) => {
@@ -48,7 +70,7 @@ export function initDb(windowObj) {
   }
 
   request.onerror = (e) => {
-    // TODO
+    console.log('db error', e.target.error);
   }
 }
 
@@ -73,15 +95,44 @@ export function getLibraries() {
         store.openCursor().onsuccess = (e) => {
           const cursor = e.target.result;
           if (cursor) {
-            libraries[cursor.key] = {
+            libraries[cursor.primaryKey] = {
               ...cursor.value,
-              id: cursor.key
+              id: cursor.primaryKey
             };
             cursor.continue();
           } else {
             resolve(libraries);
           }
         }
+      }
+    )
+  );
+}
+
+export function getTags(libraryId) {
+  return db.then(
+    db => new Promise(
+      (resolve, reject) => {
+        const store = db.transaction('tags').objectStore('tags');
+        const index = store.index('libraryId');
+        const bound = IDBKeyRange.bound(libraryId, libraryId, false, false);
+
+        const tags = {};
+        const request = index.openCursor(bound);
+        request.onsuccess = (e) => {
+          const cursor = e.target.result;
+          if (cursor) {
+            tags[cursor.primaryKey] = {
+              ...cursor.value,
+              id: cursor.primaryKey
+            }
+            cursor.continue();
+          } else {
+            resolve(tags);
+          }
+        }
+
+        request.onerror = handleError(reject);
       }
     )
   );
