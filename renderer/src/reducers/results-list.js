@@ -4,7 +4,7 @@ import {
   RESULTS_SET_SORT_TYPE
 } from '../actions/action-types';
 import {splitAtTail} from '../utils/array-utils';
-import {getSortedFilesArray, SORT_ASC, SORT_FILE_NAME} from '../utils/file-sort-utils';
+import {getSortedFilesArray, SORT_ASC, SORT_FILE_NAME} from '../utils/file-utils';
 
 const initialState = {
   files: {},

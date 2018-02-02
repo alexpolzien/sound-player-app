@@ -46,4 +46,5 @@ export function* fetchLibraries() {
       libraries
     });
   }
+  return libraries;
 }

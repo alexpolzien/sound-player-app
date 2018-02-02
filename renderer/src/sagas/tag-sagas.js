@@ -27,12 +27,11 @@ export function* doCreateTag(action) {
   }
 
   if (result) {
-    yield call(fetchTags, {id: action.libraryId});
+    yield call(fetchTags, action.libraryId);
   }
 }
 
-export function* fetchTags(action) {
-  const libraryId = action.id;
+export function* fetchTags(libraryId) {
   yield put({type: TAGS_FETCH_START});
 
   let tags;
@@ -49,4 +48,6 @@ export function* fetchTags(action) {
       libraryId
     });
   }
+
+  return tags;
 }

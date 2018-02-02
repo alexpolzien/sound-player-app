@@ -30,21 +30,38 @@ import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
 import {doCreateLibrary, fetchLibraries} from './library-sagas';
+import {sortLibrariesArray} from '../utils/library-utils';
 import {loadState} from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 import {doCreateTag, fetchTags} from './tag-sagas';
 
 function* initApp(action) {
   const savedState = loadState();
+  let libraryId;
+
   if (savedState) {
     yield put({type: APP_STATE_RECALLED, savedState});
+    if (savedState.libraries.selectedId) {
+      libraryId = savedState.libraries.selectedId;
+    }
   }
-  yield call(fetchLibraries);
+
+  const libraries = yield call(fetchLibraries);
+
+  // select a library if there isn't one selected
+  if (!libraryId) {
+    const libArray = Object.values(libraries);
+    sortLibrariesArray(libArray); // TODO: insert default library
+    libraryId = libArray[0].id;
+    yield put(setLibraryId(libraryId));
+  }
+
+  yield call(fetchTags, libraryId);
 
   // if there is a saved library id, set it TODO: load tags instead?
-  if (savedState.libraries.selectedId) {
+  /*if (savedState.libraries.selectedId) {
     yield put(setLibraryId(savedState.libraries.selectedId));
-  }
+  }*/
 }
 
 function* selectFile(action) {
@@ -118,6 +135,10 @@ function* onStopped() {
     const nextFile = yield select(nextFileSelector);
     yield put({type: SELECT_FILE, file: nextFile});
   }
+}
+
+function* fetchTagsWithAction(action) {
+  yield call(fetchTags, action.libraryId);
 }
 
 function* watchCreateLibrary() {

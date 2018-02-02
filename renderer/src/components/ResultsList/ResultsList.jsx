@@ -21,7 +21,7 @@ import {
   SORT_PLAYS,
   SORT_ASC,
   SORT_DESC
-} from '../../utils/file-sort-utils';
+} from '../../utils/file-utils';
 import {
   multiSelectedSelector,
   sortedResultsSelector

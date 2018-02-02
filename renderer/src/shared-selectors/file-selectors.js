@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import {getSortedFilesArray} from '../utils/file-sort-utils';
+import {getSortedFilesArray} from '../utils/file-utils';
 
 const filesSelector = state => state.resultsList.files;
 const selectedFileIdSelector = state => state.resultsList.selectedId;
