@@ -2,6 +2,7 @@ import {
   DATABASE_NAME,
   DATABASE_VERSION
 } from '../constants';
+import {customError} from '../utils/error-utils';
 
 let _dbPromiseResolver;
 let _dbPromiseRejecter;
@@ -23,6 +24,11 @@ function handleError(reject) {
 
 function getTimestamp() {
   return (new Date()).getTime();
+}
+
+function sanitizeName(str) {
+  // remove leading and trailing whitespace
+  return str.replace(/^\s+|\s+$/g, '');
 }
 
 export function initDb(windowObj) {
@@ -79,6 +85,7 @@ export function initDb(windowObj) {
 }
 
 export function createLibrary(name) {
+  name = sanitizeName(name);
   return db.then(db => new Promise(
     (resolve, reject) => {
       const store = db.transaction('libraries', 'readwrite').objectStore('libraries');
@@ -90,18 +97,26 @@ export function createLibrary(name) {
 }
 
 export function createTag(name, libraryId) {
-  return db.then(db => new Promise(
-    (resolve, reject) => {
-      const store = db.transaction('tags', 'readwrite').objectStore('tags');
-      const request = store.add({
-        name,
-        libraryId,
-        timeCreated: getTimestamp()
-      });
-      request.onsuccess = resolve;
-      request.onerror = handleError(reject);
-    }
-  ));
+  name = sanitizeName(name);
+
+  return Promise.all([db, getTags(libraryId)]).then(([db, tags]) => {
+    return new Promise((resolve, reject) => {
+      // make sure this is not a duplicate tag in the library
+      const existing = Object.values(tags).find(tag => tag.name === name);
+      if (existing) {
+        reject(customError('DuplicateTagName', `A tag named ${name} already exists`));
+      } else {
+        const store = db.transaction('tags', 'readwrite').objectStore('tags');
+        const request = store.add({
+          name,
+          libraryId,
+          timeCreated: getTimestamp()
+        });
+        request.onsuccess = resolve;
+        request.onerror = handleError(reject);
+      }
+    });
+  });
 }
 
 export function getLibraries() {
