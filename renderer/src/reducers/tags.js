@@ -1,4 +1,5 @@
 import {
+  APP_STATE_RECALLED,
   TAGS_FETCH_ERROR,
   TAGS_FETCH_START,
   TAGS_FETCH_SUCCESS,
@@ -15,6 +16,11 @@ const initialState = {
 
 export default function tags(state = initialState, action) {
   switch (action.type) {
+    case APP_STATE_RECALLED:
+      return {
+        ...state,
+        selectedIds: action.savedState.tags.selectedIds
+      };
     case TAGS_FETCH_ERROR:
       return {
         ...state,

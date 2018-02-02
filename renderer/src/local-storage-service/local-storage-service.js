@@ -2,6 +2,8 @@ import {
   LIBRARY_SET_ID,
   SET_PANEL_OFF,
   SET_PANEL_ON,
+  TAGS_SELECT_ID,
+  TAGS_UNSELECT_ID,
   TOGGLE_PANEL
 } from '../actions/action-types';
 import {SAVED_STATE_SCHEMA_VERSION} from '../constants';
@@ -18,6 +20,9 @@ function saveState(store) {
     },
     libraries: {
       selectedId: state.libraries.selectedId
+    },
+    tags: {
+      selectedIds: state.tags.selectedIds
     }
   };
   localStorage.savedState = JSON.stringify(savedState);
@@ -49,6 +54,8 @@ const createLocalStorageMiddleware = () => store => {
       case LIBRARY_SET_ID:
       case SET_PANEL_OFF:
       case SET_PANEL_ON:
+      case TAGS_SELECT_ID:
+      case TAGS_UNSELECT_ID:
       case TOGGLE_PANEL:
         saveState(store);
         break;
