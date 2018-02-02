@@ -56,6 +56,7 @@ class AddBox extends React.Component {
   }
 
   _onKeyDown(e) {
+    e.stopPropagation();
     if (e.keyCode === ENTER_KEY) {
       const value = this.state.value;
       this.setState({value: ''});
