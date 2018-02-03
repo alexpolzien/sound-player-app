@@ -1,7 +1,7 @@
 import {
   IMPORT_CREATE_NEW,
   IMPORT_INSERT_SUCCESS,
-  IMPORT_METADATA_DECODED,
+  IMPORT_METADATA_DECODED_BATCH,
   IMPORT_READ_STATS,
   IMPORT_REMOVE_IMPORT
 } from '../actions/action-types';
@@ -63,28 +63,28 @@ export default function imports(state = initialState, action) {
           };
         }
       }
-    case IMPORT_METADATA_DECODED:
+    case IMPORT_METADATA_DECODED_BATCH:
       {
         const importId = action.importId;
         if (!(importId in state.activeImports)) {
           throw new Error(`Bad import id ${importId}`);
         }
         const oldImport = state.activeImports[importId];
-        const oldFile = oldImport.files[action.filePath];
-        const newFile = {
-          ...oldFile,
-          status: 'decoded',
-          bitDepth: action.bitDepth,
-          channels: action.channels,
-          durationMs: action.durationMs,
-          sampleRate: action.sampleRate
-        };
+        const files = {...oldImport.files};
+        for (const metadata of action.metadatas) {
+          const oldFile = files[metadata.filePath];
+          files[metadata.filePath] = {
+            ...oldFile,
+            status: 'decoded',
+            bitDepth: metadata.bitDepth,
+            channels: metadata.channels,
+            durationMs: metadata.durationMs,
+            sampleRate: metadata.sampleRate
+          }
+        }
         const newImport = {
           ...oldImport,
-          files: {
-            ...oldImport.files,
-            [action.filePath]: newFile
-          }
+          files
         };
         return {
           ...state,
