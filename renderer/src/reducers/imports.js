@@ -1,5 +1,6 @@
 import {
   IMPORT_CREATE_NEW,
+  IMPORT_INSERT_SUCCESS,
   IMPORT_METADATA_DECODED,
   IMPORT_READ_STATS,
   IMPORT_REMOVE_IMPORT
@@ -23,6 +24,13 @@ export default function imports(state = initialState, action) {
             libraryId: action.libraryId
           }
         }
+      };
+    case IMPORT_INSERT_SUCCESS:
+      const activeImports = {...state.activeImports};
+      delete activeImports[action.theImport.id];
+      return {
+        ...state,
+        activeImports
       };
     case IMPORT_READ_STATS:
       {

@@ -144,7 +144,6 @@ function* fetchTagsWithAction(action) {
 }
 
 function* createImport(action) {
-  console.log(action);
   yield call(ImportSagas.createImport, action.theImport);
 }
 

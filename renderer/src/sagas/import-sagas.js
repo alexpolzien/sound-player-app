@@ -17,6 +17,10 @@ export function* createImport(imp) {
   try {
     result = yield call(DbService.createImport, imp);
   } catch (error) {
+    yield put({type: IMPORT_INSERT_ERROR});
+  }
 
+  if (result) {
+    yield put({type: IMPORT_INSERT_SUCCESS, theImport: imp});
   }
 }
