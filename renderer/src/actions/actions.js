@@ -86,7 +86,7 @@ export function togglePanel(name) {
 export function setLibraryId(id) {
   return {
     type: LIBRARY_SET_ID,
-    id
+    libraryId: id
   };
 }
 

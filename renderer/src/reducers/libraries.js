@@ -24,10 +24,10 @@ export default function libraries(state = initialState, action) {
         return state;
       }
     case LIBRARY_SET_ID:
-      if (action.id in state.libraries) {
+      if (action.libraryId in state.libraries) {
         return {
           ...state,
-          selectedId: action.id
+          selectedId: action.libraryId
         };
       } else {
         return state;

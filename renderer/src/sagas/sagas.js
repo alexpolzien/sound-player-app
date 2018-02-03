@@ -20,6 +20,7 @@ import {
   IMPORT_READY_TO_INSERT,
   LIBRARY_CREATE_NEW,
   LIBRARY_SET_ID,
+  LIBRARY_UPDATED,
   LIST_SELECT_FILE_ID,
   PLAYBACK_SET_PLAYING,
   PLAYBACK_SET_STOPPED,
@@ -146,6 +147,14 @@ function* createImport(action) {
   yield call(ImportSagas.createImport, action.theImport);
 }
 
+function* handleLibraryChanges(action) {
+  // re-fetch tags if the current library changed
+  const selectedLib = yield select(state => state.libraries.selectedId);
+  if (selectedLib === action.libraryId) {
+    yield call(TagSagas.fetchTags, action.libraryId);
+  }
+}
+
 function* watchCreateLibrary() {
   yield takeEvery(LIBRARY_CREATE_NEW, LibrarySagas.createLibrary);
 }
@@ -162,8 +171,8 @@ function* watchInitApp() {
   yield takeLatest(APP_INIT, initApp);
 }
 
-function* watchLibrarySetId() {
-  yield takeLatest(LIBRARY_SET_ID, TagSagas.fetchTags);
+function* watchLibraryChanges() {
+  yield takeLatest([LIBRARY_SET_ID, LIBRARY_UPDATED], handleLibraryChanges);
 }
 
 function* watchSelectFile() {
@@ -184,7 +193,7 @@ export default function* rootSaga() {
     watchCreateTag(),
     watchImportReady(),
     watchInitApp(),
-    watchLibrarySetId(),
+    watchLibraryChanges(),
     watchSelectFile(),
     watchStopped(),
     watchTogglePlay()
