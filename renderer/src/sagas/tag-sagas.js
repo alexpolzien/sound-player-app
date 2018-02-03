@@ -4,10 +4,12 @@ import {
 } from 'redux-saga/effects';
 
 import {
+  LIBRARY_UPDATED,
   TAGS_CREATE_NEW_ERROR,
   TAGS_FETCH_ERROR,
   TAGS_FETCH_START,
-  TAGS_FETCH_SUCCESS
+  TAGS_FETCH_SUCCESS,
+  TAGS_UPDATED
 } from '../actions/action-types';
 import * as DbService from '../db-service/db-service';
 
@@ -24,7 +26,7 @@ export function* createTag(action) {
   }
 
   if (result) {
-    yield call(fetchTags, action.libraryId);
+    yield put({type: LIBRARY_UPDATED, libraryId: action.libraryId});
   }
 }
 
@@ -35,7 +37,7 @@ export function* fetchTags(libraryId) {
   try {
     tags = yield call(DbService.getTags, libraryId);
   } catch (error) {
-    yield put({type: TAGS_FETCH_ERROR});
+    yield put({type: TAGS_FETCH_ERROR, error});
   }
 
   if (tags) {
@@ -44,6 +46,8 @@ export function* fetchTags(libraryId) {
       tags,
       libraryId
     });
+
+    yield put({type: TAGS_UPDATED, libraryId});
   }
 
   return tags;

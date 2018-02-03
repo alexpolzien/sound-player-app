@@ -23,6 +23,7 @@ export function* createLibrary(action) {
     });
   }
 
+  // TODO: remove this?
   if (result) {
     yield call(DbService.fetchLibraries);
   }

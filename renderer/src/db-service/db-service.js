@@ -267,3 +267,31 @@ export function getTags(libraryId) {
     )
   );
 }
+
+export function getAllFiles(libraryId) {
+  return db.then(
+    db => new Promise(
+      (resolve, reject) => {
+        const store = db.transaction('files').objectStore('files');
+        const bound = IDBKeyRange.bound(libraryId, libraryId, false, false);
+        const index = store.index('libraryId');
+
+        const files = {};
+        const request = index.openCursor(bound);
+        request.onsuccess = (e) => {
+          const cursor = e.target.result;
+          if (cursor) {
+            files[cursor.primaryKey] = {
+              ...cursor.value
+            };
+            cursor.continue();
+          } else {
+            resolve(files);
+          }
+        }
+
+        request.onerror = handleError(reject);
+      }
+    )
+  );
+}

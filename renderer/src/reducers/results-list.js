@@ -1,5 +1,6 @@
 import {
   LIST_SELECT_FILE_ID,
+  RESULTS_FETCH_SUCCESS,
   RESULTS_SET_SORT_DIRECTION,
   RESULTS_SET_SORT_TYPE
 } from '../actions/action-types';
@@ -60,6 +61,11 @@ export default function resultsList(state = initialState, action) {
         ...state,
         selectedId: action.id,
         selectRanges
+      };
+    case RESULTS_FETCH_SUCCESS:
+      return {
+        ...state,
+        files: action.files
       };
     case RESULTS_SET_SORT_DIRECTION:
       return {

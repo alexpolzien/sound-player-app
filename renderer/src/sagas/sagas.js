@@ -26,7 +26,10 @@ import {
   PLAYBACK_SET_STOPPED,
   PLAYBACK_TOGGLE_PLAY,
   SELECT_FILE,
-  TAGS_CREATE_NEW
+  TAGS_CREATE_NEW,
+  TAGS_SELECT_ID,
+  TAGS_UPDATED,
+  TAGS_UNSELECT_ID
 } from '../actions/action-types';
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
@@ -34,6 +37,7 @@ import * as ImportSagas from './import-sagas';
 import * as LibrarySagas from './library-sagas';
 import {sortLibrariesArray} from '../utils/library-utils';
 import {loadState} from '../local-storage-service/local-storage-service';
+import * as ResultsSagas from './results-sagas';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
 import * as TagSagas from './tag-sagas';
 
@@ -155,6 +159,11 @@ function* handleLibraryChanges(action) {
   }
 }
 
+function* handleTagChanges(action) {
+  console.log('tags changed', action);
+  yield call(ResultsSagas.fetchResults, action.libraryId)
+}
+
 function* watchCreateLibrary() {
   yield takeEvery(LIBRARY_CREATE_NEW, LibrarySagas.createLibrary);
 }
@@ -183,6 +192,11 @@ function* watchStopped() {
   yield takeLatest(PLAYBACK_SET_STOPPED, onStopped);
 }
 
+function* watchTagChanges() {
+  yield takeLatest(
+    [TAGS_SELECT_ID, TAGS_UPDATED, TAGS_UNSELECT_ID], handleTagChanges);
+}
+
 function* watchTogglePlay() {
   yield takeLatest(PLAYBACK_TOGGLE_PLAY, togglePlay);
 }
@@ -196,6 +210,7 @@ export default function* rootSaga() {
     watchLibraryChanges(),
     watchSelectFile(),
     watchStopped(),
+    watchTagChanges(),
     watchTogglePlay()
   ]);
 }
