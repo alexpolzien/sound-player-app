@@ -18,8 +18,16 @@ function handleError(reject) {
   // takes a resolve function and returns a function that rejects with the db error
 
   return (e) => {
+    console.log(e);
     reject(e.target.error);
   }
+}
+
+function promisifyRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = resolve;
+    request.onerror = reject;
+  });
 }
 
 function getTimestamp() {
@@ -46,12 +54,23 @@ export function initDb(windowObj) {
 
     const tagsStore = database.createObjectStore('tags', {autoIncrement: true});
     tagsStore.createIndex('libraryId', 'libraryId', {unique: false});
+    tagsStore.createIndex('libraryId-name', ['libraryId', 'name'], {unique: true});
+
+    const filesStore = database.createObjectStore('files', {autoIncrement: true});
+    filesStore.createIndex('importId', 'importId', {unique: false});
+    filesStore.createIndex('libraryId', 'libraryId', {unique: false});
+    filesStore.createIndex('path-libraryId', ['path', 'libraryId'], {unique: true});
+
+    const fileTagsStore = database.createObjectStore('fileTags', {autoIncrement: true});
+    fileTagsStore.createIndex('fileId', 'fileId', {unique: false});
+    fileTagsStore.createIndex('tagId', 'tagId', {unique: false});
+    fileTagsStore.createIndex('fileId-tagId', ['fileId', 'tagId'], {unique: true});
 
     // test db items
     tagsStore.transaction.oncomplete = (e) => {
       const trans = database.transaction(['libraries', 'tags'], 'readwrite');
 
-      const timeStamp = (new Date()).getTime();
+      const timeStamp = getTimestamp();
       const libStore = trans.objectStore('libraries');
 
       libStore.add({name: 'Test Library #1', timeCreated: timeStamp});
@@ -99,24 +118,101 @@ export function createLibrary(name) {
 export function createTag(name, libraryId) {
   name = sanitizeName(name);
 
-  return Promise.all([db, getTags(libraryId)]).then(([db, tags]) => {
-    return new Promise((resolve, reject) => {
-      // make sure this is not a duplicate tag in the library
-      const existing = Object.values(tags).find(tag => tag.name === name);
-      if (existing) {
-        reject(customError('DuplicateTagName', `A tag named ${name} already exists`));
-      } else {
-        const store = db.transaction('tags', 'readwrite').objectStore('tags');
-        const request = store.add({
-          name,
-          libraryId,
-          timeCreated: getTimestamp()
-        });
-        request.onsuccess = resolve;
+  return db.then(db => new Promise(
+    (resolve, reject) => {
+      const store = db.transaction('tags', 'readwrite').objectStore('tags');
+      const request = store.add({
+        name,
+        libraryId,
+        timeCreated: getTimestamp()
+      });
+      request.onsuccess = resolve;
+      request.onerror = handleError(reject);
+    }
+  ));
+}
+
+function dedupFiles(files, libraryId, trans, fStore) {
+  return new Promise((resolve, reject) => {
+    const withoutDups = [];
+    const promises = [];
+
+    const index = fStore.index('path-libraryId');
+    for (const file of files) {
+      promises.push(new Promise((resolve, reject) => {
+        const request = index.get([file.path, libraryId]);
+        request.onsuccess = (e) => {
+          if (e.target.result === undefined) {
+            // not a duplicate
+            withoutDups.push(file);
+          }
+          resolve();
+        };
         request.onerror = handleError(reject);
-      }
-    });
+      }));
+    }
+
+    Promise.all(promises).then(
+      () => { resolve(withoutDups); },
+      reject
+    );
   });
+}
+
+export function createImport(imp) {
+  let files = [];
+
+  for (const filePath in imp.files) {
+    const fileInfo = imp.files[filePath];
+    files.push({
+      path: filePath,
+      importId: imp.id,
+      libraryId: imp.libraryId,
+      bitDepth: fileInfo.bitDepth,
+      channels: fileInfo.channels,
+      durationMs: fileInfo.durationMs,
+      sampleRate: fileInfo.sampleRate,
+      plays: 0,
+      lastPlayed: null
+    });
+  }
+
+  return db.then(db => new Promise(
+    (resolve, reject) => {
+      const trans = db.transaction(['imports', 'files'], 'readwrite');
+
+      const abort = (error) => {
+        trans.abort();
+        reject(error);
+      }
+
+      const promises = [];
+
+      const iStore = trans.objectStore('imports');
+      promises.push(promisifyRequest(iStore.add({
+        id: imp.id,
+        libraryId: imp.libraryId,
+        timeCreated: getTimestamp()
+      })));
+
+      const fStore = trans.objectStore('files');
+
+      dedupFiles(files, imp.libraryId, trans, fStore).then(
+        files => {
+          for (const file of files) {
+            promises.push(promisifyRequest(fStore.add(file)));
+          }
+          Promise.all(promises).then(
+            resolve,
+            handleError(reject)
+          );
+        },
+        (err) => {
+          abort();
+        }
+      );
+    }
+  ));
 }
 
 export function getLibraries() {

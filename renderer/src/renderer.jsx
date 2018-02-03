@@ -87,7 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // TODO: use middleware instead
 ipcRenderer.on('importfiles', (event, message) => {
-  store.dispatch(createNewImport(message));
+  const state = store.getState();
+  const libraryId = state.libraries.selectedId;
+  store.dispatch(createNewImport(message, libraryId));
 });
 
 if (module.hot) {

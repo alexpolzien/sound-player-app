@@ -19,8 +19,8 @@ export default function imports(state = initialState, action) {
           ...state.activeImports,
           [action.id]: {
             id: action.id,
-            timeCreated: action.timeCreated,
-            files: {}
+            files: {},
+            libraryId: action.libraryId
           }
         }
       };

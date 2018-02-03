@@ -53,11 +53,11 @@ export function setResultsSortDirection(direction) {
   };
 }
 
-export function createNewImport(filePaths) {
+export function createNewImport(filePaths, libraryId) {
   return {
     type: IMPORT_CREATE_NEW,
     id: getUniqueId(),
-    timeCreated: (new Date()).getTime(),
+    libraryId,
     filePaths
   };
 }

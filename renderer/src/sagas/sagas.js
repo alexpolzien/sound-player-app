@@ -17,6 +17,7 @@ import {
   BUFFER_FETCHED_FROM_CACHE_SUCCESS,
   APP_INIT,
   APP_STATE_RECALLED,
+  IMPORT_READY_TO_INSERT,
   LIBRARY_CREATE_NEW,
   LIBRARY_SET_ID,
   LIST_SELECT_FILE_ID,
@@ -29,6 +30,7 @@ import {
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
 import {nextFileSelector} from '../shared-selectors/file-selectors';
+import * as ImportSagas from './import-sagas';
 import {doCreateLibrary, fetchLibraries} from './library-sagas';
 import {sortLibrariesArray} from '../utils/library-utils';
 import {loadState} from '../local-storage-service/local-storage-service';
@@ -141,12 +143,21 @@ function* fetchTagsWithAction(action) {
   yield call(fetchTags, action.libraryId);
 }
 
+function* createImport(action) {
+  console.log(action);
+  yield call(ImportSagas.createImport, action.theImport);
+}
+
 function* watchCreateLibrary() {
   yield takeEvery(LIBRARY_CREATE_NEW, doCreateLibrary);
 }
 
 function* watchCreateTag() {
   yield takeEvery(TAGS_CREATE_NEW, doCreateTag);
+}
+
+function* watchImportReady() {
+  yield takeEvery(IMPORT_READY_TO_INSERT, createImport);
 }
 
 function* watchInitApp() {
@@ -173,6 +184,7 @@ export default function* rootSaga() {
   yield all([
     watchCreateLibrary(),
     watchCreateTag(),
+    watchImportReady(),
     watchInitApp(),
     watchLibrarySetId(),
     watchSelectFile(),
