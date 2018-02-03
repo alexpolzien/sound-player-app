@@ -166,6 +166,7 @@ export function createImport(imp) {
     const fileInfo = imp.files[filePath];
     files.push({
       path: filePath,
+      fileName: fileInfo.fileName,
       importId: imp.id,
       libraryId: imp.libraryId,
       bitDepth: fileInfo.bitDepth,
@@ -282,7 +283,8 @@ export function getAllFiles(libraryId) {
           const cursor = e.target.result;
           if (cursor) {
             files[cursor.primaryKey] = {
-              ...cursor.value
+              ...cursor.value,
+              id: cursor.primaryKey
             };
             cursor.continue();
           } else {

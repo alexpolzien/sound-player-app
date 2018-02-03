@@ -6,11 +6,14 @@ const BATCH_SIZE = 200;
 const BATCH_TIMEOUT = 1000;
 
 function readFile(event, importId, filePath) {
+  const parsedPath = path.parse(filePath);
+  const fileName = parsedPath.name + parsedPath.ext;
+
   fs.readFile(filePath, function(err, data) {
     if (err) {
-      event.sender.send('import-read-file-error', importId, filePath);
+      event.sender.send('import-read-file-error', importId, filePath, fileName);
     } else {
-      event.sender.send('import-read-file-data', importId, filePath, data);
+      event.sender.send('import-read-file-data', importId, filePath, fileName, data);
     }
   });
 }

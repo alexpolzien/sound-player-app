@@ -39,6 +39,7 @@ function decodeMetaData(message) {
         bitDepth: format.bitsPerChannel,
         durationMs: duration,
         filePath: message.filePath,
+        fileName: message.fileName,
         importId: message.importId
       });
     }

@@ -7,14 +7,17 @@ import {
 } from '../actions/action-types';
 
 const createIpcMiddleware = () => store => {
-  ipcRenderer.on('import-read-file-data', (event, importId, filePath, data) => {
+  ipcRenderer.on('import-read-file-data', (event, importId, filePath, fileName, data) => {
     store.dispatch({
       type: IMPORT_BUFFER_READ,
       buffer: data,
       filePath,
+      fileName,
       importId
     })
   });
+
+  // TODO: handle file read error
 
   ipcRenderer.on('import-read-files-stats', (event, importId, files, errors) => {
     store.dispatch({

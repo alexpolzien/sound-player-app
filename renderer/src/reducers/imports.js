@@ -79,7 +79,8 @@ export default function imports(state = initialState, action) {
             bitDepth: metadata.bitDepth,
             channels: metadata.channels,
             durationMs: metadata.durationMs,
-            sampleRate: metadata.sampleRate
+            sampleRate: metadata.sampleRate,
+            fileName: metadata.fileName
           }
         }
         const newImport = {

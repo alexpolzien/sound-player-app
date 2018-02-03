@@ -87,6 +87,7 @@ const createDecoderMiddleware = () => store => {
         jobType: 'metadata',
         buffer: action.buffer,
         filePath: action.filePath,
+        fileName: action.fileName,
         importId: action.importId
       });
     }

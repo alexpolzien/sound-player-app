@@ -108,7 +108,7 @@ class ResultsListItem extends React.Component {
         <div className={styles.otherCell}>{file.channels}</div>
         <div className={styles.otherCell}>{file.format}</div>
         <div className={styles.otherCell}>{this.constructor.formatTime(file.durationMs)}</div>
-        <div className={styles.otherCell}>TODO</div>
+        <div className={styles.otherCell}>{file.plays}</div>
       </li>
     );
   }
