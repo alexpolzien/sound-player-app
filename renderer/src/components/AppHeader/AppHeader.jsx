@@ -35,7 +35,7 @@ class AppHeaderMain extends React.PureComponent {
   static items = [
     ['libraries', 'Libraries'],
     ['tags', 'Tags'],
-    ['info', 'Info']
+    ['fileTags', 'Tag Editor']
   ];
   render() {
     const props = this.props;

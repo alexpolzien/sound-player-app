@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import styles from './PanelContainer.css';
 import LibrariesPanel from '../LibrariesPanel/LibrariesPanel.jsx';
 import ResultsList from '../ResultsList/ResultsList.jsx';
+import TagsEditorPanel from '../TagsEditorPanel/TagsEditorPanel.jsx';
 import TagsPanel from '../TagsPanel/TagsPanel.jsx';
 import withBreakpoints from '../enhancers/with-breakpoints.jsx';
 
@@ -29,7 +30,8 @@ class PanelContainerMain extends React.PureComponent {
   static panels = [
     ['libraries', '220px', '320px', LibrariesPanel, props => props.libraries],
     ['tags', '220px', '320px', TagsPanel, props => props.tags],
-    ['list', 'auto', 'auto', ResultsList, _ => true]
+    ['list', 'auto', 'auto', ResultsList, _ => true],
+    ['fileTags', '220px', '320px', TagsEditorPanel, props => props.fileTags]
   ];
   render() {
     const {widthBreakpoint} = this.props;

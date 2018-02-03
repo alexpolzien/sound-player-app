@@ -1,0 +1,23 @@
+.container {
+  composes: absolute100 from '../../global-classes.css';
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 24px auto;
+}
+
+.gridItem {
+  grid-column: 1 / 2;
+  position: relative;
+}
+
+.header {
+  composes: gridItem;
+
+  grid-row: 1 / 2;
+}
+
+.list {
+  composes: gridItem;
+
+  grid-row: 2 / 3;
+}

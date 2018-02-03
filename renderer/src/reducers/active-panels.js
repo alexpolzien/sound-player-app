@@ -8,7 +8,7 @@ import {
 const initialState = {
   libraries: true,
   tags: false,
-  info: false
+  fileTags: false
 };
 
 export default function activePanels(state = initialState, action) {
