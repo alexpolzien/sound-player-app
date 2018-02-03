@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ALLOWED_FILE_EXTENSIONS = ['.wav', '.aiff'];
+const BATCH_SIZE = 200;
+const BATCH_TIMEOUT = 1000;
 
 function readFile(event, importId, filePath) {
   fs.readFile(filePath, function(err, data) {
@@ -74,15 +76,25 @@ function filterFilenames(filePaths) {
   });
 }
 
+function readFilesBatched(files, event, importId) {
+  for (let i = 0; files.length && i < BATCH_SIZE; i++) {
+    const filePath = files.shift();
+    readFile(event, importId, filePath);
+  }
+  if (files.length) {
+    setTimeout(() => {
+      readFilesBatched(files, event, importId);
+    }, BATCH_TIMEOUT);
+  }
+}
+
 function readImportFiles(event, importId, filePaths) {
   flattenPaths(filePaths).then(function(results) {
     const files = filterFilenames(results.files);
     const errors = results.errors;
 
     event.sender.send('import-read-files-stats', importId, files, errors);
-    files.forEach(function(filePath) {
-      readFile(event, importId, filePath);
-    });
+    readFilesBatched(files, event, importId);
   });
 }
 
