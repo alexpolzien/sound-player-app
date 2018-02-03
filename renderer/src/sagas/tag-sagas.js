@@ -9,15 +9,12 @@ import {
   TAGS_FETCH_START,
   TAGS_FETCH_SUCCESS
 } from '../actions/action-types';
-import {
-  createTag,
-  getTags
-} from '../db-service/db-service';
+import * as DbService from '../db-service/db-service';
 
-export function* doCreateTag(action) {
+export function* createTag(action) {
   let result;
   try {
-    result = yield call(createTag, action.name, action.libraryId);
+    result = yield call(DbService.createTag, action.name, action.libraryId);
   } catch (error) {
     yield put({
       type: TAGS_CREATE_NEW_ERROR,
@@ -36,7 +33,7 @@ export function* fetchTags(libraryId) {
 
   let tags;
   try {
-    tags = yield call(getTags, libraryId);
+    tags = yield call(DbService.getTags, libraryId);
   } catch (error) {
     yield put({type: TAGS_FETCH_ERROR});
   }

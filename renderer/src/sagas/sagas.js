@@ -29,13 +29,12 @@ import {
 } from '../actions/action-types';
 import {SOUNDS_DIR} from '../constants';
 import {getBufferData} from '../buffer-cache-service/buffer-cache-service';
-import {nextFileSelector} from '../shared-selectors/file-selectors';
 import * as ImportSagas from './import-sagas';
-import {doCreateLibrary, fetchLibraries} from './library-sagas';
+import * as LibrarySagas from './library-sagas';
 import {sortLibrariesArray} from '../utils/library-utils';
 import {loadState} from '../local-storage-service/local-storage-service';
 import {getPlayer, waitForStop} from '../sound-player-service/sound-player-service';
-import {doCreateTag, fetchTags} from './tag-sagas';
+import * as TagSagas from './tag-sagas';
 
 function* initApp(action) {
   const savedState = loadState();
@@ -48,7 +47,7 @@ function* initApp(action) {
     }
   }
 
-  const libraries = yield call(fetchLibraries);
+  const libraries = yield call(LibrarySagas.fetchLibraries);
 
   // select a library if there isn't one selected
   if (!libraryId) {
@@ -58,7 +57,7 @@ function* initApp(action) {
     yield put(setLibraryId(libraryId));
   }
 
-  yield call(fetchTags, libraryId);
+  yield call(TagSagas.fetchTags, libraryId);
 
   // if there is a saved library id, set it TODO: load tags instead?
   /*if (savedState.libraries.selectedId) {
@@ -148,11 +147,11 @@ function* createImport(action) {
 }
 
 function* watchCreateLibrary() {
-  yield takeEvery(LIBRARY_CREATE_NEW, doCreateLibrary);
+  yield takeEvery(LIBRARY_CREATE_NEW, LibrarySagas.createLibrary);
 }
 
 function* watchCreateTag() {
-  yield takeEvery(TAGS_CREATE_NEW, doCreateTag);
+  yield takeEvery(TAGS_CREATE_NEW, TagSagas.createTag);
 }
 
 function* watchImportReady() {
@@ -164,7 +163,7 @@ function* watchInitApp() {
 }
 
 function* watchLibrarySetId() {
-  yield takeLatest(LIBRARY_SET_ID, fetchTags);
+  yield takeLatest(LIBRARY_SET_ID, TagSagas.fetchTags);
 }
 
 function* watchSelectFile() {

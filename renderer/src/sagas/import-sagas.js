@@ -6,7 +6,8 @@ import {
 import {
   IMPORT_INSERT_ERROR,
   IMPORT_INSERT_START,
-  IMPORT_INSERT_SUCCESS
+  IMPORT_INSERT_SUCCESS,
+  LIBRARY_UPDATED
 } from '../actions/action-types';
 import * as DbService from '../db-service/db-service.js';
 
@@ -22,5 +23,6 @@ export function* createImport(imp) {
 
   if (result) {
     yield put({type: IMPORT_INSERT_SUCCESS, theImport: imp});
+    yield put({type: LIBRARY_UPDATED, libraryId: imp.libraryId});
   }
 }

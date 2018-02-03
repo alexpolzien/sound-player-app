@@ -9,15 +9,12 @@ import {
   LIBRARIES_FETCH_ALL_SUCCESS,
   LIBRARIES_FETCH_ALL_START
 } from '../actions/action-types';
-import {
-  createLibrary,
-  getLibraries
-} from '../db-service/db-service';
+import * as DbService from '../db-service/db-service';
 
-export function* doCreateLibrary(action) {
+export function* createLibrary(action) {
   let result;
   try {
-    result = yield call(createLibrary, action.name);
+    result = yield call(DbService.createLibrary, action.name);
   } catch (error) {
     yield put({
       type: LIBRARY_CREATE_NEW_ERROR,
@@ -27,7 +24,7 @@ export function* doCreateLibrary(action) {
   }
 
   if (result) {
-    yield call(fetchLibraries);
+    yield call(DbService.fetchLibraries);
   }
 }
 
@@ -36,7 +33,7 @@ export function* fetchLibraries() {
 
   let libraries;
   try {
-    libraries = yield call(getLibraries);
+    libraries = yield call(DbService.getLibraries);
   } catch (error) {
     yield put({type: LIBRARIES_FETCH_ALL_ERROR, error});
   }
